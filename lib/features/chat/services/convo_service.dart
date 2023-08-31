@@ -23,7 +23,7 @@ class ConvoService {
     // TODO(rhbrunetto): submit to xmtp, save into chatrepository
   }
 
-  Stream<IList<Message>> watchMessages() => _repository.watch(
+  Stream<IList<Message>> watchMessages() => _repository.watchMessages(
         sender: _sender,
         recipient: _recipient,
       );

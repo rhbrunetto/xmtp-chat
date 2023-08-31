@@ -4,6 +4,7 @@ import 'package:eth_chat/core/sign_in_flow.dart';
 import 'package:eth_chat/core/splash_scren.dart';
 import 'package:eth_chat/features/account/module.dart';
 import 'package:eth_chat/features/account/services/account_bloc.dart';
+import 'package:eth_chat/features/wallet_connect/module.dart';
 import 'package:eth_chat/routes.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,10 @@ Future<void> main() async {
 
   runApp(
     MultiProvider(
-      providers: const [AccountModule()],
+      providers: const [
+        AccountModule(),
+        WalletConnectModule(),
+      ],
       child: const ChatApp(),
     ),
   );

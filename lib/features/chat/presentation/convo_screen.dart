@@ -3,6 +3,7 @@ import 'package:dfunc/dfunc.dart';
 import 'package:eth_chat/di.dart';
 import 'package:eth_chat/features/account/data/my_account.dart';
 import 'package:eth_chat/features/chat/data/message.dart';
+import 'package:eth_chat/features/chat/presentation/widgets/chat_input_widget.dart';
 import 'package:eth_chat/features/chat/services/convo_service.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/material.dart';
@@ -34,17 +35,20 @@ class _State extends State<ConvoScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => StreamBuilder(
-        stream: _service.watchMessages(),
-        builder: (context, snapshot) {
-          final messages =
-              snapshot.data.ifNull(() => const IListConst<Message>([]));
+  Widget build(BuildContext context) => ChatInputWidget(
+        onNewMessage: _service.send,
+        child: StreamBuilder(
+          stream: _service.watchMessages(),
+          builder: (context, snapshot) {
+            final messages =
+                snapshot.data.ifNull(() => const IListConst<Message>([]));
 
-          return ListView.builder(
-            itemBuilder: (context, index) => ListTile(
-              title: Text(messages.elementAt(index).text),
-            ),
-          );
-        },
+            return ListView.builder(
+              itemBuilder: (context, index) => ListTile(
+                title: Text(messages.elementAt(index).text),
+              ),
+            );
+          },
+        ),
       );
 }

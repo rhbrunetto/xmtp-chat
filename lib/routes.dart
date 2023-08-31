@@ -13,7 +13,15 @@ class AppRouter extends $AppRouter {
   @override
   final List<AutoRoute> routes = [
     AutoRoute(page: SplashRoute.page, initial: true),
-    AutoRoute(page: SignInFlowRoute.page),
+    AutoRoute(
+      page: SignInFlowRoute.page,
+      children: [
+        AutoRoute(
+          path: '',
+          page: WalletConnectRoute.page,
+        ),
+      ],
+    ),
     AutoRoute(
       page: AuthenticatedFlowRoute.page,
       children: [
@@ -21,7 +29,7 @@ class AppRouter extends $AppRouter {
           path: '',
           page: ChatListRoute.page,
           children: [
-            CustomRoute(page: ConvoRoute.page),
+            AutoRoute(page: ConvoRoute.page),
           ],
         ),
       ],

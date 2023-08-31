@@ -14,25 +14,27 @@ class ChatRepository {
 
   final MyDatabase _db;
 
-  Future<Message?> load(String id) {
-    final query = _db.select(_db.messageRows)..where((p) => p.id.equals(id));
+  Stream<IList<Message>> watchContacts(String recipient) {
+    final me = recipient;
+    final msgs = _db.select(_db.messageRows, distinct: true)
+      ..where(
+          (it) => it.sender.equals(me).not() | it.recipient.equals(me).not())
+      ..addColumns([_db.messageRows.sender, _db.messageRows.recipient]);
 
-    return query.getSingleOrNull().then((row) => row?.toModel());
+    return msgs.watch().map((it) => it.map((r) => r.toModel()).toIList());
   }
 
   Future<void> save(Message message) async =>
       await _db.into(_db.messageRows).insertOnConflictUpdate(message.toDto());
 
-  Stream<IList<Message>> watch({
+  Stream<IList<Message>> watchMessages({
     required String sender,
     required String recipient,
   }) {
     final sent = _db.select(_db.messageRows)
-      ..where((p) => p.recipient.equals(recipient))
-      ..where((p) => p.sender.equals(sender));
+      ..where((p) => p.recipient.equals(recipient) & p.sender.equals(sender));
     final received = _db.select(_db.messageRows)
-      ..where((p) => p.recipient.equals(sender))
-      ..where((p) => p.sender.equals(recipient));
+      ..where((p) => p.recipient.equals(sender) & p.sender.equals(recipient));
 
     final sentStream = sent.watch().map((rows) => rows.map((r) => r.toModel()));
     final receivedStream =

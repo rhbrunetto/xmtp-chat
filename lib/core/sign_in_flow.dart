@@ -9,7 +9,5 @@ class SignInFlowScreen extends StatelessWidget {
   static const route = SignInFlowRoute.new;
 
   @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
+  Widget build(BuildContext context) => const AutoRouter();
 }
