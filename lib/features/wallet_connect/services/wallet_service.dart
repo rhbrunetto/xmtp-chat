@@ -43,4 +43,6 @@ class WalletService {
   }
 
   Future<void> sign(String topic, dynamic parameters) async {}
+
+  Future<void> stop() async {}
 }

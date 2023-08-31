@@ -10,8 +10,10 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:eth_chat/db/db.dart' as _i4;
+import 'package:eth_chat/features/account/data/my_account.dart' as _i8;
 import 'package:eth_chat/features/account/services/account_bloc.dart' as _i3;
 import 'package:eth_chat/features/chat/data/chat_repository.dart' as _i5;
+import 'package:eth_chat/features/chat/services/chat_bloc.dart' as _i7;
 import 'package:eth_chat/features/chat/services/convo_service.dart' as _i6;
 import 'package:get_it/get_it.dart' as _i1;
 import 'package:injectable/injectable.dart' as _i2;
@@ -38,6 +40,14 @@ extension GetItInjectableX on _i1.GetIt {
         _i6.ConvoService(
           sender: sender,
           recipient: recipient,
+          repository: gh<_i5.ChatRepository>(),
+        ));
+    gh.factoryParam<_i7.ChatBloc, _i8.MyAccount, dynamic>((
+      myAccount,
+      _,
+    ) =>
+        _i7.ChatBloc(
+          myAccount: myAccount,
           repository: gh<_i5.ChatRepository>(),
         ));
     return this;

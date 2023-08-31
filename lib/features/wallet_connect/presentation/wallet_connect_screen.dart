@@ -1,7 +1,9 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:walletconnect_flutter_v2/walletconnect_flutter_v2.dart';
 import 'package:walletconnect_modal_flutter/walletconnect_modal_flutter.dart';
 
+@RoutePage()
 class WalletConnectScreen extends StatefulWidget {
   const WalletConnectScreen({super.key});
 
