@@ -14,4 +14,15 @@ class SessionCubit extends Cubit<SessionState> {
   void startSession(Web3App client, SessionData session) => emit(
         Session(app: client, sessionData: session).let(SessionState.success),
       );
+
+  void disconnect() {
+    final session = state.whenOrNull(success: identity);
+    if (session == null) return;
+
+    session.app.core.pairing.disconnect(
+      topic: session.sessionData.pairingTopic,
+    );
+
+    emit(const SessionState.failed());
+  }
 }
