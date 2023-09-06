@@ -3,6 +3,7 @@ import 'package:dfunc/dfunc.dart';
 import 'package:eth_chat/features/chat/data/chat.dart';
 import 'package:eth_chat/features/chat/data/chat_repository.dart';
 import 'package:eth_chat/features/session/data/session.dart';
+import 'package:eth_chat/utils/processing_state.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -16,12 +17,7 @@ typedef _State = ChatState;
 typedef _EventHandler = EventHandler<_Event, _State>;
 typedef _Emitter = Emitter<_State>;
 
-@freezed
-class ChatState with _$ChatState {
-  const factory ChatState.none() = _None;
-  const factory ChatState.loading() = _Loading;
-  const factory ChatState.chats(IList<Chat> chats) = _Chats;
-}
+typedef ChatState = ProcessingState<IList<Chat>>;
 
 @freezed
 class ChatEvent with _$ChatEvent {
@@ -36,7 +32,7 @@ class ChatBloc extends Bloc<_Event, _State> {
     required ChatRepository repository,
   })  : _repository = repository,
         _session = session,
-        super(const ChatState.none()) {
+        super(const ChatState.loading()) {
     on<_Event>(
       _handler,
       transformer: (events, mapper) => sequential<ChatEvent>().call(
@@ -70,8 +66,8 @@ class ChatBloc extends Bloc<_Event, _State> {
         },
       ).letAsync(
         (it) => it.fold(
-          (_) => emit(const ChatState.none()),
-          (it) => emit(ChatState.chats(it)),
+          (_) => emit(const ChatState.failed()),
+          (it) => emit(ChatState.success(it)),
         ),
       );
 
