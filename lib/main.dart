@@ -2,10 +2,9 @@ import 'package:auto_route/auto_route.dart';
 import 'package:eth_chat/core/authenticated_flow.dart';
 import 'package:eth_chat/core/sign_in_flow.dart';
 import 'package:eth_chat/core/splash_scren.dart';
-import 'package:eth_chat/di.config.dart';
 import 'package:eth_chat/di.dart';
-import 'package:eth_chat/features/account/module.dart';
-import 'package:eth_chat/features/account/services/account_bloc.dart';
+import 'package:eth_chat/features/session/module.dart';
+import 'package:eth_chat/features/session/services/session_cubit.dart';
 import 'package:eth_chat/features/wallet_connect/module.dart';
 import 'package:eth_chat/routes.dart';
 import 'package:flutter/foundation.dart';
@@ -29,8 +28,7 @@ Future<void> main() async {
   runApp(
     MultiProvider(
       providers: const [
-        AccountModule(),
-        WalletConnectModule(),
+        SessionModule(),
       ],
       child: const ChatApp(),
     ),
@@ -48,7 +46,7 @@ class _State extends State<ChatApp> {
   final _router = AppRouter();
 
   @override
-  Widget build(BuildContext context) => BlocBuilder<AccountBloc, AccountState>(
+  Widget build(BuildContext context) => BlocBuilder<SessionCubit, SessionState>(
         builder: (context, state) => MaterialApp.router(
           routeInformationParser: _router.defaultRouteParser(),
           routerDelegate: AutoRouterDelegate.declarative(

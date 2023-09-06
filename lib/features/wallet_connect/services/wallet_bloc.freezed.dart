@@ -18,19 +18,25 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$WalletState {
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(Web3App app, bool isProcessing) $default, {
+    TResult Function(Web3App app, WalletConnectModalService modalService,
+            bool isProcessing)
+        $default, {
     required TResult Function() none,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(Web3App app, bool isProcessing)? $default, {
+    TResult? Function(Web3App app, WalletConnectModalService modalService,
+            bool isProcessing)?
+        $default, {
     TResult? Function()? none,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(Web3App app, bool isProcessing)? $default, {
+    TResult Function(Web3App app, WalletConnectModalService modalService,
+            bool isProcessing)?
+        $default, {
     TResult Function()? none,
     required TResult orElse(),
   }) =>
@@ -110,7 +116,9 @@ class _$_None implements _None {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(Web3App app, bool isProcessing) $default, {
+    TResult Function(Web3App app, WalletConnectModalService modalService,
+            bool isProcessing)
+        $default, {
     required TResult Function() none,
   }) {
     return none();
@@ -119,7 +127,9 @@ class _$_None implements _None {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(Web3App app, bool isProcessing)? $default, {
+    TResult? Function(Web3App app, WalletConnectModalService modalService,
+            bool isProcessing)?
+        $default, {
     TResult? Function()? none,
   }) {
     return none?.call();
@@ -128,7 +138,9 @@ class _$_None implements _None {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(Web3App app, bool isProcessing)? $default, {
+    TResult Function(Web3App app, WalletConnectModalService modalService,
+            bool isProcessing)?
+        $default, {
     TResult Function()? none,
     required TResult orElse(),
   }) {
@@ -180,7 +192,8 @@ abstract class _$$_WalletStateCopyWith<$Res> {
           _$_WalletState value, $Res Function(_$_WalletState) then) =
       __$$_WalletStateCopyWithImpl<$Res>;
   @useResult
-  $Res call({Web3App app, bool isProcessing});
+  $Res call(
+      {Web3App app, WalletConnectModalService modalService, bool isProcessing});
 }
 
 /// @nodoc
@@ -195,6 +208,7 @@ class __$$_WalletStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? app = null,
+    Object? modalService = null,
     Object? isProcessing = null,
   }) {
     return _then(_$_WalletState(
@@ -202,6 +216,10 @@ class __$$_WalletStateCopyWithImpl<$Res>
           ? _value.app
           : app // ignore: cast_nullable_to_non_nullable
               as Web3App,
+      modalService: null == modalService
+          ? _value.modalService
+          : modalService // ignore: cast_nullable_to_non_nullable
+              as WalletConnectModalService,
       isProcessing: null == isProcessing
           ? _value.isProcessing
           : isProcessing // ignore: cast_nullable_to_non_nullable
@@ -213,17 +231,22 @@ class __$$_WalletStateCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_WalletState implements _WalletState {
-  const _$_WalletState({required this.app, this.isProcessing = true});
+  const _$_WalletState(
+      {required this.app,
+      required this.modalService,
+      this.isProcessing = true});
 
   @override
   final Web3App app;
+  @override
+  final WalletConnectModalService modalService;
   @override
   @JsonKey()
   final bool isProcessing;
 
   @override
   String toString() {
-    return 'WalletState(app: $app, isProcessing: $isProcessing)';
+    return 'WalletState(app: $app, modalService: $modalService, isProcessing: $isProcessing)';
   }
 
   @override
@@ -232,12 +255,14 @@ class _$_WalletState implements _WalletState {
         (other.runtimeType == runtimeType &&
             other is _$_WalletState &&
             (identical(other.app, app) || other.app == app) &&
+            (identical(other.modalService, modalService) ||
+                other.modalService == modalService) &&
             (identical(other.isProcessing, isProcessing) ||
                 other.isProcessing == isProcessing));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, app, isProcessing);
+  int get hashCode => Object.hash(runtimeType, app, modalService, isProcessing);
 
   @JsonKey(ignore: true)
   @override
@@ -248,30 +273,36 @@ class _$_WalletState implements _WalletState {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>(
-    TResult Function(Web3App app, bool isProcessing) $default, {
+    TResult Function(Web3App app, WalletConnectModalService modalService,
+            bool isProcessing)
+        $default, {
     required TResult Function() none,
   }) {
-    return $default(app, isProcessing);
+    return $default(app, modalService, isProcessing);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(Web3App app, bool isProcessing)? $default, {
+    TResult? Function(Web3App app, WalletConnectModalService modalService,
+            bool isProcessing)?
+        $default, {
     TResult? Function()? none,
   }) {
-    return $default?.call(app, isProcessing);
+    return $default?.call(app, modalService, isProcessing);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>(
-    TResult Function(Web3App app, bool isProcessing)? $default, {
+    TResult Function(Web3App app, WalletConnectModalService modalService,
+            bool isProcessing)?
+        $default, {
     TResult Function()? none,
     required TResult orElse(),
   }) {
     if ($default != null) {
-      return $default(app, isProcessing);
+      return $default(app, modalService, isProcessing);
     }
     return orElse();
   }
@@ -310,9 +341,12 @@ class _$_WalletState implements _WalletState {
 
 abstract class _WalletState implements WalletState {
   const factory _WalletState(
-      {required final Web3App app, final bool isProcessing}) = _$_WalletState;
+      {required final Web3App app,
+      required final WalletConnectModalService modalService,
+      final bool isProcessing}) = _$_WalletState;
 
   Web3App get app;
+  WalletConnectModalService get modalService;
   bool get isProcessing;
   @JsonKey(ignore: true)
   _$$_WalletStateCopyWith<_$_WalletState> get copyWith =>
@@ -324,38 +358,32 @@ mixin _$WalletEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initialize,
-    required TResult Function() connect,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initialize,
-    TResult? Function()? connect,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initialize,
-    TResult Function()? connect,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_Initialize value) initialize,
-    required TResult Function(_Connect value) connect,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Initialize value)? initialize,
-    TResult? Function(_Connect value)? connect,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Initialize value)? initialize,
-    TResult Function(_Connect value)? connect,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -418,7 +446,6 @@ class _$_Initialize implements _Initialize {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function() initialize,
-    required TResult Function() connect,
   }) {
     return initialize();
   }
@@ -427,7 +454,6 @@ class _$_Initialize implements _Initialize {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initialize,
-    TResult? Function()? connect,
   }) {
     return initialize?.call();
   }
@@ -436,7 +462,6 @@ class _$_Initialize implements _Initialize {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initialize,
-    TResult Function()? connect,
     required TResult orElse(),
   }) {
     if (initialize != null) {
@@ -449,7 +474,6 @@ class _$_Initialize implements _Initialize {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_Initialize value) initialize,
-    required TResult Function(_Connect value) connect,
   }) {
     return initialize(this);
   }
@@ -458,7 +482,6 @@ class _$_Initialize implements _Initialize {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(_Initialize value)? initialize,
-    TResult? Function(_Connect value)? connect,
   }) {
     return initialize?.call(this);
   }
@@ -467,7 +490,6 @@ class _$_Initialize implements _Initialize {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Initialize value)? initialize,
-    TResult Function(_Connect value)? connect,
     required TResult orElse(),
   }) {
     if (initialize != null) {
@@ -479,105 +501,4 @@ class _$_Initialize implements _Initialize {
 
 abstract class _Initialize implements WalletEvent {
   const factory _Initialize() = _$_Initialize;
-}
-
-/// @nodoc
-abstract class _$$_ConnectCopyWith<$Res> {
-  factory _$$_ConnectCopyWith(
-          _$_Connect value, $Res Function(_$_Connect) then) =
-      __$$_ConnectCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$_ConnectCopyWithImpl<$Res>
-    extends _$WalletEventCopyWithImpl<$Res, _$_Connect>
-    implements _$$_ConnectCopyWith<$Res> {
-  __$$_ConnectCopyWithImpl(_$_Connect _value, $Res Function(_$_Connect) _then)
-      : super(_value, _then);
-}
-
-/// @nodoc
-
-class _$_Connect implements _Connect {
-  const _$_Connect();
-
-  @override
-  String toString() {
-    return 'WalletEvent.connect()';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$_Connect);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initialize,
-    required TResult Function() connect,
-  }) {
-    return connect();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initialize,
-    TResult? Function()? connect,
-  }) {
-    return connect?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initialize,
-    TResult Function()? connect,
-    required TResult orElse(),
-  }) {
-    if (connect != null) {
-      return connect();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(_Initialize value) initialize,
-    required TResult Function(_Connect value) connect,
-  }) {
-    return connect(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(_Initialize value)? initialize,
-    TResult? Function(_Connect value)? connect,
-  }) {
-    return connect?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(_Initialize value)? initialize,
-    TResult Function(_Connect value)? connect,
-    required TResult orElse(),
-  }) {
-    if (connect != null) {
-      return connect(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _Connect implements WalletEvent {
-  const factory _Connect() = _$_Connect;
 }

@@ -1,5 +1,5 @@
 import 'package:eth_chat/di.dart';
-import 'package:eth_chat/features/account/module.dart';
+import 'package:eth_chat/features/session/module.dart';
 import 'package:eth_chat/features/chat/data/chat_repository.dart';
 import 'package:eth_chat/features/chat/services/chat_watcher.dart';
 import 'package:flutter/material.dart';

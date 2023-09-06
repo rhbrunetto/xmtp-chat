@@ -1,7 +1,7 @@
 import 'package:dfunc/dfunc.dart';
-import 'package:eth_chat/features/account/data/my_account.dart';
-import 'package:eth_chat/features/account/services/account_bloc.dart';
 import 'package:eth_chat/features/chat/module.dart';
+import 'package:eth_chat/features/session/data/session.dart';
+import 'package:eth_chat/features/session/services/session_cubit.dart';
 import 'package:eth_chat/routes.gr.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
@@ -15,14 +15,14 @@ class AuthenticatedFlowScreen extends StatelessWidget {
   static const route = AuthenticatedFlowRoute.new;
 
   @override
-  Widget build(BuildContext context) => BlocBuilder<AccountBloc, AccountState>(
+  Widget build(BuildContext context) => BlocBuilder<SessionCubit, SessionState>(
         builder: (context, state) {
           final account = state.whenOrNull(success: identity);
           if (account == null) return const SizedBox.shrink();
 
           return MultiProvider(
             providers: [
-              Provider<MyAccount>.value(value: account),
+              Provider<Session>.value(value: account),
               const ChatModule(),
             ],
             child: const AutoRouter(),
