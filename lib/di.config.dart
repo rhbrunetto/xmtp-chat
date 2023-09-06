@@ -9,12 +9,13 @@
 // coverage:ignore-file
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:eth_chat/db/db.dart' as _i4;
-import 'package:eth_chat/features/account/data/my_account.dart' as _i9;
-import 'package:eth_chat/features/account/services/account_bloc.dart' as _i3;
+import 'package:eth_chat/db/db.dart' as _i3;
 import 'package:eth_chat/features/chat/data/chat_repository.dart' as _i6;
-import 'package:eth_chat/features/chat/services/chat_bloc.dart' as _i8;
-import 'package:eth_chat/features/chat/services/convo_service.dart' as _i7;
+import 'package:eth_chat/features/chat/services/chat_bloc.dart' as _i9;
+import 'package:eth_chat/features/chat/services/chat_watcher.dart' as _i7;
+import 'package:eth_chat/features/chat/services/convo_service.dart' as _i8;
+import 'package:eth_chat/features/session/data/session.dart' as _i10;
+import 'package:eth_chat/features/session/services/session_cubit.dart' as _i4;
 import 'package:eth_chat/features/wallet_connect/services/wallet_bloc.dart'
     as _i5;
 import 'package:get_it/get_it.dart' as _i1;
@@ -31,26 +32,28 @@ extension GetItInjectableX on _i1.GetIt {
       environment,
       environmentFilter,
     );
-    gh.factory<_i3.AccountBloc>(() => _i3.AccountBloc());
-    gh.lazySingleton<_i4.MyDatabase>(() => _i4.MyDatabase());
+    gh.lazySingleton<_i3.MyDatabase>(() => _i3.MyDatabase());
+    gh.factory<_i4.SessionCubit>(() => _i4.SessionCubit());
     gh.factory<_i5.WalletBloc>(() => _i5.WalletBloc());
     gh.factory<_i6.ChatRepository>(
-        () => _i6.ChatRepository(gh<_i4.MyDatabase>()));
-    gh.factoryParam<_i7.ConvoService, String, String>((
+        () => _i6.ChatRepository(gh<_i3.MyDatabase>()));
+    gh.factory<_i7.ChatWatcher>(
+        () => _i7.ChatWatcher(repository: gh<_i6.ChatRepository>()));
+    gh.factoryParam<_i8.ConvoService, String, String>((
       sender,
       recipient,
     ) =>
-        _i7.ConvoService(
+        _i8.ConvoService(
           sender: sender,
           recipient: recipient,
           repository: gh<_i6.ChatRepository>(),
         ));
-    gh.factoryParam<_i8.ChatBloc, _i9.MyAccount, dynamic>((
-      myAccount,
+    gh.factoryParam<_i9.ChatBloc, _i10.Session, dynamic>((
+      session,
       _,
     ) =>
-        _i8.ChatBloc(
-          myAccount: myAccount,
+        _i9.ChatBloc(
+          session: session,
           repository: gh<_i6.ChatRepository>(),
         ));
     return this;

@@ -1,15 +1,15 @@
 import 'package:eth_chat/di.dart';
-import 'package:eth_chat/features/account/services/account_bloc.dart';
+import 'package:eth_chat/features/session/services/session_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nested/nested.dart';
 
-class AccountModule extends SingleChildStatelessWidget {
-  const AccountModule({super.key, super.child});
+class SessionModule extends SingleChildStatelessWidget {
+  const SessionModule({super.key, super.child});
 
   @override
   Widget buildWithChild(BuildContext context, Widget? child) => BlocProvider(
-        create: (context) => sl<AccountBloc>(),
+        create: (context) => sl<SessionCubit>(),
         child: child,
       );
 }
@@ -25,7 +25,7 @@ class LogoutListener extends SingleChildStatelessWidget {
 
   @override
   Widget buildWithChild(BuildContext context, Widget? child) =>
-      BlocListener<AccountBloc, AccountState>(
+      BlocListener<SessionCubit, SessionState>(
         listenWhen: (s1, s2) => s1 != s2,
         listener: (context, state) => state.whenOrNull(
           failed: () => onLogout(context),

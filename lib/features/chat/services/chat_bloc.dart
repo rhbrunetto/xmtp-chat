@@ -1,8 +1,8 @@
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:dfunc/dfunc.dart';
-import 'package:eth_chat/features/account/data/my_account.dart';
 import 'package:eth_chat/features/chat/data/chat.dart';
 import 'package:eth_chat/features/chat/data/chat_repository.dart';
+import 'package:eth_chat/features/session/data/session.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -32,10 +32,10 @@ class ChatEvent with _$ChatEvent {
 @injectable
 class ChatBloc extends Bloc<_Event, _State> {
   ChatBloc({
-    @factoryParam required MyAccount myAccount,
+    @factoryParam required Session session,
     required ChatRepository repository,
   })  : _repository = repository,
-        _myAccount = myAccount,
+        _session = session,
         super(const ChatState.none()) {
     on<_Event>(
       _handler,
@@ -49,7 +49,7 @@ class ChatBloc extends Bloc<_Event, _State> {
   }
 
   final ChatRepository _repository;
-  final MyAccount _myAccount;
+  final Session _session;
 
   _EventHandler get _handler => (event, emit) => event.map(
         refresh: (e) => _onRefresh(emit),
@@ -61,7 +61,7 @@ class ChatBloc extends Bloc<_Event, _State> {
           emit(const ChatState.loading());
 
           final chats =
-              await _repository.watchContacts(_myAccount.address).toList();
+              await _repository.watchContacts(_session.address).toList();
 
           return chats
               .expand(identity)

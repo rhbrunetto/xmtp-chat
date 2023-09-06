@@ -1,5 +1,7 @@
 import 'package:eth_chat/features/chat/data/chat_repository.dart';
+import 'package:injectable/injectable.dart';
 
+@injectable
 class ChatWatcher {
   ChatWatcher({
     required ChatRepository repository,
