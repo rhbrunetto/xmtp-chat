@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:eth_chat/di.dart';
 import 'package:eth_chat/features/chat/data/chat_repository.dart';
+import 'package:eth_chat/features/chat/presentation/widgets/new_chat_dialog.dart';
 import 'package:eth_chat/features/session/data/session.dart';
 import 'package:eth_chat/features/session/services/session_cubit.dart';
 import 'package:eth_chat/routes.gr.dart';
@@ -8,10 +9,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 @RoutePage()
-class ChatListScreen extends StatelessWidget {
+class ChatListScreen extends StatefulWidget {
   const ChatListScreen({super.key});
 
-  void _onNewChat() {}
+  @override
+  State<ChatListScreen> createState() => _State();
+}
+
+class _State extends State<ChatListScreen> {
+  void _openChat(String recipient) =>
+      context.router.push(ConvoRoute(recipient: recipient));
+
+  Future<void> _onNewChat() async {
+    final recipient = await showDialog(
+      context: context,
+      builder: (context) => const NewChatDialog(),
+    );
+    if (recipient == null) return;
+    _openChat(recipient);
+  }
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -48,9 +64,7 @@ class ChatListScreen extends StatelessWidget {
 
                 return ListTile(
                   title: Text(recipient),
-                  onTap: () => context.router.push(
-                    ConvoRoute(recipient: recipient),
-                  ),
+                  onTap: () => _openChat(recipient),
                 );
               },
             );

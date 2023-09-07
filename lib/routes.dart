@@ -16,22 +16,14 @@ class AppRouter extends $AppRouter {
     AutoRoute(
       page: SignInFlowRoute.page,
       children: [
-        AutoRoute(
-          path: '',
-          page: WalletConnectRoute.page,
-        ),
+        AutoRoute(path: '', page: WalletConnectRoute.page),
       ],
     ),
     AutoRoute(
       page: AuthenticatedFlowRoute.page,
       children: [
-        AutoRoute(
-          path: '',
-          page: ChatListRoute.page,
-          children: [
-            AutoRoute(page: ConvoRoute.page),
-          ],
-        ),
+        AutoRoute(path: '', page: ChatListRoute.page),
+        AutoRoute(page: ConvoRoute.page),
       ],
     ),
   ];

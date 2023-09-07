@@ -35,20 +35,28 @@ class _State extends State<ConvoScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => ChatInputWidget(
-        onNewMessage: _service.send,
-        child: StreamBuilder(
-          stream: _service.watchMessages(),
-          builder: (context, snapshot) {
-            final messages =
-                snapshot.data.ifNull(() => const IListConst<Message>([]));
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: Text(widget.recipient),
+        ),
+        body: ChatInputWidget(
+          onNewMessage: _service.send,
+          builder: (context, controller) => StreamBuilder(
+            stream: _service.watchMessages(),
+            builder: (context, snapshot) {
+              final messages =
+                  snapshot.data.ifNull(() => const IListConst<Message>([]));
 
-            return ListView.builder(
-              itemBuilder: (context, index) => ListTile(
-                title: Text(messages.elementAt(index).text),
-              ),
-            );
-          },
+              return ListView.builder(
+                controller: controller,
+                reverse: true,
+                itemCount: messages.length,
+                itemBuilder: (context, index) => ListTile(
+                  title: Text(messages.elementAt(index).text),
+                ),
+              );
+            },
+          ),
         ),
       );
 }
