@@ -2,6 +2,7 @@ import 'package:dfunc/dfunc.dart';
 import 'package:eth_chat/features/chat/module.dart';
 import 'package:eth_chat/features/session/data/session.dart';
 import 'package:eth_chat/features/session/services/session_cubit.dart';
+import 'package:eth_chat/features/xmtp/module.dart';
 import 'package:eth_chat/routes.gr.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
@@ -23,6 +24,7 @@ class AuthenticatedFlowScreen extends StatelessWidget {
           return MultiProvider(
             providers: [
               Provider<Session>.value(value: account),
+              const XmtpModule(),
               const ChatModule(),
             ],
             child: const AutoRouter(),
