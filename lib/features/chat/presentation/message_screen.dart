@@ -1,9 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:dfunc/dfunc.dart';
-import 'package:eth_chat/di.dart';
-import 'package:eth_chat/features/chat/data/message.dart';
+import 'package:eth_chat/features/chat/data/models/message.dart';
 import 'package:eth_chat/features/chat/presentation/widgets/chat_input_widget.dart';
-import 'package:eth_chat/features/chat/services/message_service.dart';
+import 'package:eth_chat/features/chat/presentation/widgets/message_widget.dart';
+import 'package:eth_chat/features/chat/services/chat_service.dart';
 import 'package:eth_chat/features/session/data/session.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/material.dart';
@@ -23,15 +23,14 @@ class MessageScreen extends StatefulWidget {
 }
 
 class _State extends State<MessageScreen> {
-  late final MessageService _service;
+  late final ChatService _service;
+  late final Session _session;
 
   @override
   void initState() {
     super.initState();
-    _service = sl<MessageService>(
-      param1: context.read<Session>().address,
-      param2: widget.topic,
-    );
+    _service = context.read<ChatService>();
+    _session = context.read<Session>();
   }
 
   @override
@@ -40,9 +39,12 @@ class _State extends State<MessageScreen> {
           title: Text(widget.topic),
         ),
         body: ChatInputWidget(
-          onNewMessage: _service.send,
+          onNewMessage: (message) => _service.sendMessage(
+            topic: widget.topic,
+            message: message,
+          ),
           builder: (context, controller) => StreamBuilder(
-            stream: _service.watchMessages(),
+            stream: _service.watchMessages(widget.topic),
             builder: (context, snapshot) {
               final messages =
                   snapshot.data.ifNull(() => const IListConst<Message>([]));
@@ -51,9 +53,14 @@ class _State extends State<MessageScreen> {
                 controller: controller,
                 reverse: true,
                 itemCount: messages.length,
-                itemBuilder: (context, index) => ListTile(
-                  title: Text(messages.elementAt(index).topic),
-                ),
+                itemBuilder: (context, index) {
+                  final message = messages.elementAt(index);
+
+                  return MessageWidget(
+                    message: message,
+                    isMine: message.sender == _session.address,
+                  );
+                },
               );
             },
           ),
