@@ -38,31 +38,34 @@ class _State extends State<MessageScreen> {
         appBar: AppBar(
           title: Text(widget.topic),
         ),
-        body: ChatInputWidget(
-          onNewMessage: (message) => _service.sendMessage(
-            topic: widget.topic,
-            message: message,
-          ),
-          builder: (context, controller) => StreamBuilder(
-            stream: _service.watchMessages(widget.topic),
-            builder: (context, snapshot) {
-              final messages =
-                  snapshot.data.ifNull(() => const IListConst<Message>([]));
+        body: RefreshIndicator(
+          onRefresh: () => _service.refreshMessages(widget.topic),
+          child: ChatInputWidget(
+            onNewMessage: (message) => _service.sendMessage(
+              topic: widget.topic,
+              message: message,
+            ),
+            builder: (context, controller) => StreamBuilder(
+              stream: _service.watchMessages(widget.topic),
+              builder: (context, snapshot) {
+                final messages =
+                    snapshot.data.ifNull(() => const IListConst<Message>([]));
 
-              return ListView.builder(
-                controller: controller,
-                reverse: true,
-                itemCount: messages.length,
-                itemBuilder: (context, index) {
-                  final message = messages.elementAt(index);
+                return ListView.builder(
+                  controller: controller,
+                  reverse: true,
+                  itemCount: messages.length,
+                  itemBuilder: (context, index) {
+                    final message = messages.elementAt(index);
 
-                  return MessageWidget(
-                    message: message,
-                    isMine: message.sender == _session.address,
-                  );
-                },
-              );
-            },
+                    return MessageWidget(
+                      message: message,
+                      isMine: message.sender == _session.address,
+                    );
+                  },
+                );
+              },
+            ),
           ),
         ),
       );

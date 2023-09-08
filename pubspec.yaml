@@ -37,6 +37,7 @@ dependencies:
   flutter_secure_storage: ^9.0.0
   web3dart: ^2.6.1
   quiver: ^3.2.1
+  retry: ^3.1.2
 
 dev_dependencies:
   flutter_test:

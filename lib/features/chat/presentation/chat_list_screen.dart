@@ -1,8 +1,11 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:dfunc/dfunc.dart';
+import 'package:eth_chat/features/chat/data/models/convo.dart';
 import 'package:eth_chat/features/chat/presentation/widgets/new_chat_dialog.dart';
 import 'package:eth_chat/features/chat/services/chat_service.dart';
 import 'package:eth_chat/features/session/services/session_cubit.dart';
 import 'package:eth_chat/routes.gr.dart';
+import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -46,35 +49,33 @@ class _State extends State<ChatListScreen> {
           onPressed: _onNewChat,
           child: const Icon(Icons.chat),
         ),
-        body: StreamBuilder(
-          stream: _service.watchConversations(),
-          builder: (context, snapshot) {
-            final conversations = snapshot.data;
+        body: RefreshIndicator(
+          onRefresh: _service.refreshConversations,
+          child: StreamBuilder(
+            stream: _service.watchConversations(),
+            builder: (context, snapshot) {
+              final conversations =
+                  snapshot.data.ifNull(() => const IListConst<Convo>([]));
 
-            if (snapshot.hasError) {
-              return const Center(
-                child: Text('Failed to load chats'),
-              );
-            }
-
-            if (conversations == null) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-
-            return ListView.builder(
-              itemCount: conversations.length,
-              itemBuilder: (context, index) {
-                final conversation = conversations.elementAt(index);
-
-                return ListTile(
-                  title: Text(conversation.peer),
-                  onTap: () => _openChat(conversation.topic),
+              if (snapshot.hasError) {
+                return const Center(
+                  child: Text('Failed to load chats'),
                 );
-              },
-            );
-          },
+              }
+
+              return ListView.builder(
+                itemCount: conversations.length,
+                itemBuilder: (context, index) {
+                  final conversation = conversations.elementAt(index);
+
+                  return ListTile(
+                    title: Text(conversation.peer),
+                    onTap: () => _openChat(conversation.topic),
+                  );
+                },
+              );
+            },
+          ),
         ),
       );
 }

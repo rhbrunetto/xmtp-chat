@@ -1,4 +1,5 @@
 import 'package:eth_chat/config.dart';
+import 'package:eth_chat/db/db.dart';
 import 'package:eth_chat/di.config.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
@@ -21,5 +22,8 @@ abstract class AppModule {
   FlutterSecureStorage get secureStorage => const FlutterSecureStorage();
 
   @lazySingleton
-  final xmtp.Api api = xmtp.Api.create(host: xmtpHost);
+  final xmtp.Api api = xmtp.Api.create(host: xmtpHost, isSecure: true);
+
+  @lazySingleton
+  final db = MyDatabase.connect();
 }

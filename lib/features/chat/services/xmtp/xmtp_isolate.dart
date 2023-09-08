@@ -65,44 +65,46 @@ class XmtpIsolate {
     return true;
   }
 
-  Future<T> command<T>(XmtpIsolateCommand method,
-      {List args = const []}) async {
+  Future<T> command<T>(
+    XmtpIsolateCommand method, {
+    List args = const [],
+  }) async {
     final id = "${_commandCount++}-$method";
     debugPrint('sending command: $id');
     final result = _foregroundReceiver.waitForIdentifiedResult<T>(id);
-    sendToWorker.send([id, method, args]);
+    sendToWorker.send([id, method.name, args]);
     return result.timeout(commandTimeout);
   }
 }
 
 //TODO(rhbrunetto): generate code for interface / dispatcher
 Map<
-    XmtpIsolateCommand,
+    String,
     Future<Object?> Function(
       XmtpReceiver receiver,
       XmtpSender sender,
       List args,
     )> _commands = {
-  XmtpIsolateCommand.kill: (receiver, _, args) => receiver.stop(),
-  XmtpIsolateCommand.refreshConversations: (receiver, _, args) =>
+  XmtpIsolateCommand.kill.name: (receiver, _, args) => receiver.stop(),
+  XmtpIsolateCommand.refreshConversations.name: (receiver, _, args) =>
       receiver.refreshConversations(
         since: args[0] as DateTime?,
       ),
-  XmtpIsolateCommand.refreshMessages: (receiver, _, args) =>
+  XmtpIsolateCommand.refreshMessages.name: (receiver, _, args) =>
       receiver.refreshMessages(
         topics: args[0] as List<String>,
         since: args[1] as DateTime?,
       ),
-  XmtpIsolateCommand.canMessage: (_, sender, args) =>
+  XmtpIsolateCommand.canMessage.name: (_, sender, args) =>
       sender.canMessage(args[0] as String),
-  XmtpIsolateCommand.newConversation: (_, sender, args) => sender
+  XmtpIsolateCommand.newConversation.name: (_, sender, args) => sender
       .newConversation(
         args[0] as String,
         conversationId: args[1] as String,
         metadata: args[2] as Map<String, String>,
       )
       .then((convo) => convo.topic),
-  XmtpIsolateCommand.sendMessage: (_, sender, args) => sender
+  XmtpIsolateCommand.sendMessage.name: (_, sender, args) => sender
       .sendMessage(
         args[0] as String,
         args[1] as xmtp.EncodedContent,
@@ -119,7 +121,10 @@ void _mainXmtpIsolate(List args) async {
   debugPrint('starting xmtp worker for ${keys.wallet}');
 
   //TODO(rhbrunetto): improve DI on isolate
-  final client = await xmtp.Client.createFromKeys(sl<xmtp.Api>(), keys);
+  final api = sl<xmtp.Api>();
+  final client = await xmtp.Client.createFromKeys(api, keys);
+  print(client.address);
+  print(api);
   final receiver = sl<XmtpReceiver>(param1: client);
   final sender = sl<XmtpSender>(param1: client);
 
@@ -144,7 +149,7 @@ void _mainXmtpIsolate(List args) async {
         debugPrint('worker discarding malformed command: $command');
       }
     } catch (err) {
-      debugPrint('error handling xmtp isolate request: $err');
+      debugPrint('error handling xmtp isolate request: $err for $command');
     }
   });
   responsePort.send(["port", workerPort.sendPort]);
@@ -185,7 +190,10 @@ class _ForegroundReceiver {
             _handlePort(res[1] as SendPort);
           } else if (type == "complete") {
             _handleCompletion(
-                res[1] as String, res[2] as bool, res[3] as Object?);
+              res[1].toString(),
+              res[2] as bool,
+              res[3] as Object?,
+            );
           } else {
             debugPrint('unexpected response: $res');
           }
