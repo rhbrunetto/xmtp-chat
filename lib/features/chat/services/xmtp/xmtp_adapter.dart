@@ -1,5 +1,5 @@
-import 'package:eth_chat/features/chat/data/convo.dart';
-import 'package:eth_chat/features/chat/data/message.dart';
+import 'package:eth_chat/features/chat/data/models/convo.dart';
+import 'package:eth_chat/features/chat/data/models/message.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:xmtp/xmtp.dart' as xmtp;
 

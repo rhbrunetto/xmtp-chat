@@ -1,7 +1,7 @@
 import 'package:dfunc/dfunc.dart';
 import 'package:drift/drift.dart';
 import 'package:eth_chat/db/db.dart';
-import 'package:eth_chat/features/chat/data/convo.dart';
+import 'package:eth_chat/features/chat/data/models/convo.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:injectable/injectable.dart';
 
@@ -10,6 +10,13 @@ class ConvoRepository {
   const ConvoRepository(this._db);
 
   final MyDatabase _db;
+
+  Stream<IList<Convo>> watchConversations() {
+    final query = _db.convoRows.select()
+      ..orderBy([(c) => OrderingTerm.desc(c.createdAt)]);
+
+    return query.map((it) => it.toModel()).watch().map((it) => it.toIList());
+  }
 
   Future<void> saveConversations(Iterable<Convo> convos) =>
       _db.batch((batch) => batch.insertAll(

@@ -1,6 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:eth_chat/db/db.dart';
-import 'package:eth_chat/features/chat/data/message.dart';
+import 'package:eth_chat/features/chat/data/models/message.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:injectable/injectable.dart';
 

@@ -33,6 +33,10 @@ dependencies:
   bloc_concurrency: ^0.2.2
   get_it: ^7.6.0
   auto_route: ^7.8.3
+  uuid: ^3.0.7
+  flutter_secure_storage: ^9.0.0
+  web3dart: ^2.6.1
+  quiver: ^3.2.1
 
 dev_dependencies:
   flutter_test:
