@@ -14,7 +14,7 @@ import 'package:eth_chat/core/sign_in_flow.dart' as _i4;
 import 'package:eth_chat/core/splash_scren.dart' as _i5;
 import 'package:eth_chat/features/chat/presentation/chat_list_screen.dart'
     as _i2;
-import 'package:eth_chat/features/chat/presentation/convo_screen.dart' as _i3;
+import 'package:eth_chat/features/chat/presentation/message_screen.dart' as _i3;
 import 'package:eth_chat/features/wallet_connect/presentation/wallet_connect_screen.dart'
     as _i6;
 import 'package:flutter/material.dart' as _i8;
@@ -36,13 +36,13 @@ abstract class $AppRouter extends _i7.RootStackRouter {
         child: const _i2.ChatListScreen(),
       );
     },
-    ConvoRoute.name: (routeData) {
-      final args = routeData.argsAs<ConvoRouteArgs>();
+    MessageRoute.name: (routeData) {
+      final args = routeData.argsAs<MessageRouteArgs>();
       return _i7.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i3.ConvoScreen(
+        child: _i3.MessageScreen(
           key: args.key,
-          recipient: args.recipient,
+          topic: args.topic,
         ),
       );
     },
@@ -96,40 +96,40 @@ class ChatListRoute extends _i7.PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [_i3.ConvoScreen]
-class ConvoRoute extends _i7.PageRouteInfo<ConvoRouteArgs> {
-  ConvoRoute({
+/// [_i3.MessageScreen]
+class MessageRoute extends _i7.PageRouteInfo<MessageRouteArgs> {
+  MessageRoute({
     _i8.Key? key,
-    required String recipient,
+    required String topic,
     List<_i7.PageRouteInfo>? children,
   }) : super(
-          ConvoRoute.name,
-          args: ConvoRouteArgs(
+          MessageRoute.name,
+          args: MessageRouteArgs(
             key: key,
-            recipient: recipient,
+            topic: topic,
           ),
           initialChildren: children,
         );
 
-  static const String name = 'ConvoRoute';
+  static const String name = 'MessageRoute';
 
-  static const _i7.PageInfo<ConvoRouteArgs> page =
-      _i7.PageInfo<ConvoRouteArgs>(name);
+  static const _i7.PageInfo<MessageRouteArgs> page =
+      _i7.PageInfo<MessageRouteArgs>(name);
 }
 
-class ConvoRouteArgs {
-  const ConvoRouteArgs({
+class MessageRouteArgs {
+  const MessageRouteArgs({
     this.key,
-    required this.recipient,
+    required this.topic,
   });
 
   final _i8.Key? key;
 
-  final String recipient;
+  final String topic;
 
   @override
   String toString() {
-    return 'ConvoRouteArgs{key: $key, recipient: $recipient}';
+    return 'MessageRouteArgs{key: $key, topic: $topic}';
   }
 }
 

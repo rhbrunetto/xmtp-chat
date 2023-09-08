@@ -17,10 +17,11 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$Message {
   String get id => throw _privateConstructorUsedError;
-  String get recipient => throw _privateConstructorUsedError;
+  String get topic => throw _privateConstructorUsedError;
+  int get version => throw _privateConstructorUsedError;
+  DateTime get sentAt => throw _privateConstructorUsedError;
   String get sender => throw _privateConstructorUsedError;
-  DateTime get createdAt => throw _privateConstructorUsedError;
-  String get text => throw _privateConstructorUsedError;
+  Uint8List get encoded => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $MessageCopyWith<Message> get copyWith => throw _privateConstructorUsedError;
@@ -33,10 +34,11 @@ abstract class $MessageCopyWith<$Res> {
   @useResult
   $Res call(
       {String id,
-      String recipient,
+      String topic,
+      int version,
+      DateTime sentAt,
       String sender,
-      DateTime createdAt,
-      String text});
+      Uint8List encoded});
 }
 
 /// @nodoc
@@ -53,32 +55,37 @@ class _$MessageCopyWithImpl<$Res, $Val extends Message>
   @override
   $Res call({
     Object? id = null,
-    Object? recipient = null,
+    Object? topic = null,
+    Object? version = null,
+    Object? sentAt = null,
     Object? sender = null,
-    Object? createdAt = null,
-    Object? text = null,
+    Object? encoded = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      recipient: null == recipient
-          ? _value.recipient
-          : recipient // ignore: cast_nullable_to_non_nullable
+      topic: null == topic
+          ? _value.topic
+          : topic // ignore: cast_nullable_to_non_nullable
               as String,
+      version: null == version
+          ? _value.version
+          : version // ignore: cast_nullable_to_non_nullable
+              as int,
+      sentAt: null == sentAt
+          ? _value.sentAt
+          : sentAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
       sender: null == sender
           ? _value.sender
           : sender // ignore: cast_nullable_to_non_nullable
               as String,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      text: null == text
-          ? _value.text
-          : text // ignore: cast_nullable_to_non_nullable
-              as String,
+      encoded: null == encoded
+          ? _value.encoded
+          : encoded // ignore: cast_nullable_to_non_nullable
+              as Uint8List,
     ) as $Val);
   }
 }
@@ -92,10 +99,11 @@ abstract class _$$_MessageCopyWith<$Res> implements $MessageCopyWith<$Res> {
   @useResult
   $Res call(
       {String id,
-      String recipient,
+      String topic,
+      int version,
+      DateTime sentAt,
       String sender,
-      DateTime createdAt,
-      String text});
+      Uint8List encoded});
 }
 
 /// @nodoc
@@ -109,32 +117,37 @@ class __$$_MessageCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
-    Object? recipient = null,
+    Object? topic = null,
+    Object? version = null,
+    Object? sentAt = null,
     Object? sender = null,
-    Object? createdAt = null,
-    Object? text = null,
+    Object? encoded = null,
   }) {
     return _then(_$_Message(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as String,
-      recipient: null == recipient
-          ? _value.recipient
-          : recipient // ignore: cast_nullable_to_non_nullable
+      topic: null == topic
+          ? _value.topic
+          : topic // ignore: cast_nullable_to_non_nullable
               as String,
+      version: null == version
+          ? _value.version
+          : version // ignore: cast_nullable_to_non_nullable
+              as int,
+      sentAt: null == sentAt
+          ? _value.sentAt
+          : sentAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
       sender: null == sender
           ? _value.sender
           : sender // ignore: cast_nullable_to_non_nullable
               as String,
-      createdAt: null == createdAt
-          ? _value.createdAt
-          : createdAt // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      text: null == text
-          ? _value.text
-          : text // ignore: cast_nullable_to_non_nullable
-              as String,
+      encoded: null == encoded
+          ? _value.encoded
+          : encoded // ignore: cast_nullable_to_non_nullable
+              as Uint8List,
     ));
   }
 }
@@ -144,25 +157,28 @@ class __$$_MessageCopyWithImpl<$Res>
 class _$_Message implements _Message {
   const _$_Message(
       {required this.id,
-      required this.recipient,
+      required this.topic,
+      required this.version,
+      required this.sentAt,
       required this.sender,
-      required this.createdAt,
-      required this.text});
+      required this.encoded});
 
   @override
   final String id;
   @override
-  final String recipient;
+  final String topic;
+  @override
+  final int version;
+  @override
+  final DateTime sentAt;
   @override
   final String sender;
   @override
-  final DateTime createdAt;
-  @override
-  final String text;
+  final Uint8List encoded;
 
   @override
   String toString() {
-    return 'Message(id: $id, recipient: $recipient, sender: $sender, createdAt: $createdAt, text: $text)';
+    return 'Message(id: $id, topic: $topic, version: $version, sentAt: $sentAt, sender: $sender, encoded: $encoded)';
   }
 
   @override
@@ -171,17 +187,16 @@ class _$_Message implements _Message {
         (other.runtimeType == runtimeType &&
             other is _$_Message &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.recipient, recipient) ||
-                other.recipient == recipient) &&
+            (identical(other.topic, topic) || other.topic == topic) &&
+            (identical(other.version, version) || other.version == version) &&
+            (identical(other.sentAt, sentAt) || other.sentAt == sentAt) &&
             (identical(other.sender, sender) || other.sender == sender) &&
-            (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt) &&
-            (identical(other.text, text) || other.text == text));
+            const DeepCollectionEquality().equals(other.encoded, encoded));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, recipient, sender, createdAt, text);
+  int get hashCode => Object.hash(runtimeType, id, topic, version, sentAt,
+      sender, const DeepCollectionEquality().hash(encoded));
 
   @JsonKey(ignore: true)
   @override
@@ -193,21 +208,24 @@ class _$_Message implements _Message {
 abstract class _Message implements Message {
   const factory _Message(
       {required final String id,
-      required final String recipient,
+      required final String topic,
+      required final int version,
+      required final DateTime sentAt,
       required final String sender,
-      required final DateTime createdAt,
-      required final String text}) = _$_Message;
+      required final Uint8List encoded}) = _$_Message;
 
   @override
   String get id;
   @override
-  String get recipient;
+  String get topic;
+  @override
+  int get version;
+  @override
+  DateTime get sentAt;
   @override
   String get sender;
   @override
-  DateTime get createdAt;
-  @override
-  String get text;
+  Uint8List get encoded;
   @override
   @JsonKey(ignore: true)
   _$$_MessageCopyWith<_$_Message> get copyWith =>
