@@ -1,7 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:eth_chat/features/chat/data/convo_repository.dart';
 import 'package:eth_chat/features/chat/data/message_repository.dart';
-import 'package:injectable/injectable.dart';
 
 import 'open_connection.dart';
 
@@ -14,13 +13,12 @@ const _tables = [
   ConvoRows,
 ];
 
-@lazySingleton
 @DriftDatabase(tables: _tables)
 class MyDatabase extends _$MyDatabase {
-  MyDatabase() : super(openConnection());
+  MyDatabase._(QueryExecutor executor) : super(executor);
 
-  MyDatabase.connect(DatabaseConnection connection)
-      : super(connection.executor);
+  MyDatabase.connect()
+      : this._(DatabaseConnection.delayed(connectToDatabase('app.db')));
 
   @override
   int get schemaVersion => latestVersion;

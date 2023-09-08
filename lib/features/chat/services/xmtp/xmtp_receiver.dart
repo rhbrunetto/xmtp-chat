@@ -2,6 +2,7 @@
 // Important changes were made due consistency / best practices.
 
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:dfunc/dfunc.dart';
 import 'package:eth_chat/features/chat/data/convo_repository.dart';
@@ -10,9 +11,11 @@ import 'package:eth_chat/features/chat/services/xmtp/xmtp_adapter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:quiver/iterables.dart';
+import 'package:retry/retry.dart';
 import 'package:xmtp/xmtp.dart' as xmtp;
 
 //TODO(rhbrunetto): Implement retry (failure tolerance)
+@injectable
 class XmtpReceiver {
   XmtpReceiver({
     @factoryParam required xmtp.Client client,
@@ -28,7 +31,9 @@ class XmtpReceiver {
 
   StreamSubscription<xmtp.Conversation>? _conversationStream;
   StreamSubscription<xmtp.DecodedMessage>? _messageStream;
-  final Set<String> _messageStreamTopics = {};
+
+  final _messageStreamTopics = <String>{};
+  final _recovery = _Recovery();
 
   Future<void> start() async {
     _restartConversationStream();
@@ -47,6 +52,7 @@ class XmtpReceiver {
   Future<void> stop() async {
     _stopConversationStream();
     _stopMessageStream();
+    _recovery.reset();
   }
 
   Future<int> refreshMessages({
@@ -110,9 +116,13 @@ class XmtpReceiver {
 
   Future<void> _restartConversationStream() async {
     _stopConversationStream();
-    _conversationStream = _client
-        .streamConversations()
-        .listen(_onConvo, onError: (_) => _stopConversationStream());
+    _conversationStream = _client.streamConversations().listen(
+      _onConvo,
+      onError: (_) {
+        _stopConversationStream();
+        _recovery.attempt("conversations", _restartConversationStream);
+      },
+    );
   }
 
   Future<void> _onConvo(xmtp.Conversation convo) async {
@@ -132,9 +142,13 @@ class XmtpReceiver {
     _stopMessageStream();
     if (convos.isEmpty) return;
 
-    _messageStream = _client
-        .streamBatchMessages(convos)
-        .listen(_onMessage, onError: (_) => _stopMessageStream());
+    _messageStream = _client.streamBatchMessages(convos).listen(
+      _onMessage,
+      onError: (_) {
+        _stopMessageStream();
+        _recovery.attempt("messages", () => _restartMessageStream());
+      },
+    );
   }
 
   Future<void> _onMessage(xmtp.DecodedMessage decodedMessage) async {
@@ -149,13 +163,47 @@ class XmtpReceiver {
   }
 
   void _stopMessageStream() {
+    _recovery.cancel("messages");
     _messageStreamTopics.clear();
     _messageStream?.cancel();
     _messageStream = null;
   }
 
   void _stopConversationStream() {
+    _recovery.cancel("conversations");
     _conversationStream?.cancel();
     _conversationStream = null;
+  }
+}
+
+class _Recovery {
+  final Map<String, Timer> _attempts = {};
+  final RetryOptions _config = const RetryOptions();
+
+  final List<DateTime> _recentStack = [];
+
+  void attempt(String name, void Function() doRecovery) =>
+      _attempts[name] ??= Timer(_config.delay(_incrementRecentCount()), () {
+        _attempts.remove(name);
+        doRecovery();
+      });
+
+  void cancel(String name) => _attempts.remove(name)?.cancel();
+
+  void reset() {
+    for (var timer in _attempts.values) {
+      timer.cancel();
+    }
+    _attempts.clear();
+    _recentStack.clear();
+  }
+
+  int _incrementRecentCount() {
+    var now = DateTime.now();
+    _recentStack
+      ..insert(0, now)
+      ..removeWhere((t) => t.isBefore(now.subtract(_config.maxDelay)))
+      ..length = math.min(_recentStack.length, _config.maxAttempts);
+    return _recentStack.length;
   }
 }

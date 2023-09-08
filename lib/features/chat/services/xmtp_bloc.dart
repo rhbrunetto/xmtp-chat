@@ -4,13 +4,14 @@ import 'package:eth_chat/features/session/data/session.dart';
 import 'package:eth_chat/utils/processing_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:injectable/injectable.dart';
 import 'package:walletconnect_flutter_v2/walletconnect_flutter_v2.dart';
 import 'package:web3dart/crypto.dart';
-
 import 'package:xmtp/xmtp.dart' as xmtp;
 
 typedef XmtpState = ProcessingState<XmtpIsolate>;
 
+@injectable
 class XmtpBloc extends Cubit<XmtpState> {
   XmtpBloc({
     required FlutterSecureStorage storage,
@@ -22,7 +23,7 @@ class XmtpBloc extends Cubit<XmtpState> {
   final FlutterSecureStorage _storage;
   final xmtp.Api _api;
 
-  Future<void> initialize(Session session) => tryEitherAsync(
+  Future<void> initializeIsolate(Session session) => tryEitherAsync(
         (_) async {
           emit(const XmtpState.loading());
           final keys = await _getKeys(session.app, session.sessionData);
@@ -37,6 +38,14 @@ class XmtpBloc extends Cubit<XmtpState> {
             ),
           )
           .letAsync(emit);
+
+  Future<void> disconnect() => _storage.delete(key: _key);
+
+  @override
+  Future<void> close() async {
+    await state.whenOrNull(success: (it) => it.kill());
+    await super.close();
+  }
 
   Future<xmtp.PrivateKeyBundle> _getKeys(
     Web3App app,

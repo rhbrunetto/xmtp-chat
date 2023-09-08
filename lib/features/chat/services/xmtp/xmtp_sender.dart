@@ -4,6 +4,7 @@ import 'package:eth_chat/features/chat/services/xmtp/xmtp_adapter.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xmtp/xmtp.dart' as xmtp;
 
+@injectable
 class XmtpSender {
   XmtpSender({
     @factoryParam required xmtp.Client client,

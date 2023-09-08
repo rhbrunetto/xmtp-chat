@@ -26,17 +26,24 @@ class _State extends SingleChildState<ChatModule> {
   void initState() {
     super.initState();
     _xmtpBloc = sl<XmtpBloc>();
-    _init();
+    _initIsolate();
   }
 
-  void _init() => _xmtpBloc.initialize(context.read<Session>());
+  @override
+  void dispose() {
+    super.dispose();
+    _xmtpBloc.close();
+  }
+
+  void _initIsolate() => _xmtpBloc.initializeIsolate(context.read<Session>());
 
   @override
   Widget buildWithChild(BuildContext context, Widget? child) =>
       BlocBuilder<XmtpBloc, XmtpState>(
+        bloc: _xmtpBloc,
         builder: (context, state) => state.when(
           loading: () => const LoadingWidget(),
-          failed: () => RetryXmtpWidget(onRetry: _init),
+          failed: () => RetryXmtpWidget(onRetry: _initIsolate),
           success: (isolate) => MultiProvider(
             providers: [
               Provider.value(value: isolate),
@@ -50,6 +57,7 @@ class _State extends SingleChildState<ChatModule> {
                 isolate.kill();
                 sl<MessageRepository>().clear();
                 sl<ConvoRepository>().clear();
+                _xmtpBloc.disconnect();
               },
               child: child,
             ),
