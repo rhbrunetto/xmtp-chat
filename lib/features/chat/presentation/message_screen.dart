@@ -3,41 +3,41 @@ import 'package:dfunc/dfunc.dart';
 import 'package:eth_chat/di.dart';
 import 'package:eth_chat/features/chat/data/message.dart';
 import 'package:eth_chat/features/chat/presentation/widgets/chat_input_widget.dart';
-import 'package:eth_chat/features/chat/services/convo_service.dart';
+import 'package:eth_chat/features/chat/services/message_service.dart';
 import 'package:eth_chat/features/session/data/session.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 @RoutePage()
-class ConvoScreen extends StatefulWidget {
-  const ConvoScreen({
+class MessageScreen extends StatefulWidget {
+  const MessageScreen({
     super.key,
-    required this.recipient,
+    required this.topic,
   });
 
-  final String recipient;
+  final String topic;
 
   @override
-  State<ConvoScreen> createState() => _State();
+  State<MessageScreen> createState() => _State();
 }
 
-class _State extends State<ConvoScreen> {
-  late final ConvoService _service;
+class _State extends State<MessageScreen> {
+  late final MessageService _service;
 
   @override
   void initState() {
     super.initState();
-    _service = sl<ConvoService>(
+    _service = sl<MessageService>(
       param1: context.read<Session>().address,
-      param2: widget.recipient,
+      param2: widget.topic,
     );
   }
 
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: Text(widget.recipient),
+          title: Text(widget.topic),
         ),
         body: ChatInputWidget(
           onNewMessage: _service.send,
@@ -52,7 +52,7 @@ class _State extends State<ConvoScreen> {
                 reverse: true,
                 itemCount: messages.length,
                 itemBuilder: (context, index) => ListTile(
-                  title: Text(messages.elementAt(index).text),
+                  title: Text(messages.elementAt(index).topic),
                 ),
               );
             },

@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'message.freezed.dart';
@@ -6,10 +8,10 @@ part 'message.freezed.dart';
 class Message with _$Message {
   const factory Message({
     required String id,
-    required String recipient,
+    required String topic,
+    required int version,
+    required DateTime sentAt,
     required String sender,
-    required DateTime createdAt,
-    required String text,
+    required Uint8List encoded,
   }) = _Message;
 }
-

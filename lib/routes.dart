@@ -23,7 +23,7 @@ class AppRouter extends $AppRouter {
       page: AuthenticatedFlowRoute.page,
       children: [
         AutoRoute(path: '', page: ChatListRoute.page),
-        AutoRoute(page: ConvoRoute.page),
+        AutoRoute(page: MessageRoute.page),
       ],
     ),
   ];
