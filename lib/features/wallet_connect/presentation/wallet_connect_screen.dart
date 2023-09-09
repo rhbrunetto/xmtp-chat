@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:walletconnect_flutter_v2/walletconnect_flutter_v2.dart';
 import 'package:walletconnect_modal_flutter/walletconnect_modal_flutter.dart';
 
-import '../../../core/widgets/loading.dart';
+import '../../../core/widgets/loading_widget.dart';
 import '../../../l10n/l10n.dart';
 import '../../session/services/session_cubit.dart';
 import '../services/wallet_bloc.dart';

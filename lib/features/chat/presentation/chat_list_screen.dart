@@ -1,14 +1,18 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:dfunc/dfunc.dart';
-import 'package:eth_chat/features/chat/data/models/convo.dart';
-import 'package:eth_chat/features/chat/presentation/widgets/new_chat_dialog.dart';
-import 'package:eth_chat/features/chat/services/chat_service.dart';
-import 'package:eth_chat/features/session/data/session.dart';
-import 'package:eth_chat/features/session/services/session_cubit.dart';
-import 'package:eth_chat/routes.gr.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../core/widgets/retry_widget.dart';
+import '../../../l10n/l10n.dart';
+import '../../../routes.gr.dart';
+import '../../../ui/colors.dart';
+import '../../../utils/extensions.dart';
+import '../../session/services/session_cubit.dart';
+import '../data/models/convo.dart';
+import '../services/chat_service.dart';
+import 'widgets/new_chat_dialog.dart';
 
 @RoutePage()
 class ChatListScreen extends StatefulWidget {
@@ -43,11 +47,12 @@ class _State extends State<ChatListScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
-          title: const Text('Chats'),
+          title: Text(context.l10n.chatTitle),
           actions: const [_PopMenu()],
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: _onNewChat,
+          foregroundColor: EthColors.mimiPink,
           child: const Icon(Icons.chat),
         ),
         body: RefreshIndicator(
@@ -59,19 +64,34 @@ class _State extends State<ChatListScreen> {
                   snapshot.data.ifNull(() => const IListConst<Convo>([]));
 
               if (snapshot.hasError) {
-                return const Center(
-                  child: Text('Failed to load chats'),
+                return RetryWidget(
+                  message: context.l10n.chatFailedToLoad,
+                  onRetry: _service.refreshConversations,
                 );
               }
 
-              return ListView.builder(
+              if (conversations.isEmpty) {
+                return _EmptyConversations(onNewChat: _onNewChat);
+              }
+
+              return ListView.separated(
                 itemCount: conversations.length,
+                separatorBuilder: (context, _) => const Divider(),
                 itemBuilder: (context, index) {
                   final conversation = conversations.elementAt(index);
 
                   return ListTile(
-                    title: Text(conversation.peer),
+                    title: Text(
+                      conversation.peer,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                    subtitle: Text(
+                      context.elapsedTimeFormatted(conversation.lastOpenedAt),
+                    ),
                     onTap: () => _openChat(conversation.topic),
+                    trailing: const Icon(Icons.chevron_right),
                   );
                 },
               );
@@ -88,9 +108,39 @@ class _PopMenu extends StatelessWidget {
   Widget build(BuildContext context) => PopupMenuButton(
         itemBuilder: (context) => [
           PopupMenuItem(
-            child: const Text('Disconnect'),
+            child: Text(
+              context.l10n.logout,
+              style: const TextStyle(fontSize: 14),
+            ),
             onTap: () => context.read<SessionCubit>().disconnect(),
           ),
         ],
+      );
+}
+
+class _EmptyConversations extends StatelessWidget {
+  const _EmptyConversations({
+    required this.onNewChat,
+  });
+
+  final VoidCallback onNewChat;
+
+  @override
+  Widget build(BuildContext context) => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              context.l10n.chatEmpty,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            ),
+            const SizedBox(height: 16),
+            TextButton(
+              onPressed: onNewChat,
+              child: Text(context.l10n.chatEmptyCTA),
+            ),
+            const SizedBox(height: kToolbarHeight),
+          ],
+        ),
       );
 }
