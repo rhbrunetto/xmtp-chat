@@ -19,3 +19,8 @@ Some important improvements/fixes are still needed:
 - [ ] Improve overall design
 - [ ] Add feature to name conversations
 - [ ] Add LocalNotifications support
+
+## Demo
+
+https://github.com/rhbrunetto/xmtp-chat/assets/19499575/ef394ad7-6668-4f88-9bf1-28b4c52cc492
+
