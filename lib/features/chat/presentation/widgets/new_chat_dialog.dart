@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:walletconnect_flutter_v2/apis/utils/namespace_utils.dart';
+
+import '../../../../l10n/l10n.dart';
 
 class NewChatDialog extends StatefulWidget {
   const NewChatDialog({super.key});
@@ -18,15 +21,27 @@ class _NewChatDialogState extends State<NewChatDialog> {
 
   @override
   Widget build(BuildContext context) => SimpleDialog(
-        title: const Text('Recipient address'),
+        title: Text(context.l10n.newChatTitle),
         contentPadding: const EdgeInsets.all(16),
         children: [
           TextFormField(
             controller: _recipientController,
+            maxLines: 1,
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+            onFieldSubmitted: (_) => _submit(),
+            textInputAction: TextInputAction.done,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+              ),
+            ),
           ),
-          TextButton(
-            onPressed: _submit,
-            child: const Text('Submit'),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: IconButton(
+              onPressed: _submit,
+              icon: const Icon(Icons.send),
+            ),
           ),
         ],
       );
