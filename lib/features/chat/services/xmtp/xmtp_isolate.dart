@@ -5,11 +5,12 @@ import 'dart:async';
 import 'dart:isolate';
 import 'dart:ui';
 
-import 'package:eth_chat/di.dart';
-import 'package:eth_chat/features/chat/services/xmtp/xmtp_receiver.dart';
-import 'package:eth_chat/features/chat/services/xmtp/xmtp_sender.dart';
 import 'package:flutter/foundation.dart';
 import 'package:xmtp/xmtp.dart' as xmtp;
+
+import '../../../../di.dart';
+import 'xmtp_receiver.dart';
+import 'xmtp_sender.dart';
 
 enum XmtpIsolateCommand {
   kill,
@@ -37,7 +38,9 @@ class XmtpIsolate {
     debugPrint('starting xmtp isolate for ${keys.wallet}');
     _foregroundReceiver.listenForResponses();
     await Isolate.spawn(
-        _mainXmtpIsolate, [_foregroundReceiver.port.sendPort, keys]);
+      _mainXmtpIsolate,
+      [_foregroundReceiver.port.sendPort, keys],
+    );
     final sendToWorker = await _foregroundReceiver.listeningForPort.future
         .timeout(commandTimeout);
     return XmtpIsolate.fromPort(sendToWorker);
@@ -69,7 +72,7 @@ class XmtpIsolate {
     XmtpIsolateCommand method, {
     List args = const [],
   }) async {
-    final id = "${_commandCount++}-$method";
+    final id = '${_commandCount++}-$method';
     debugPrint('sending command: $id');
     final result = _foregroundReceiver.waitForIdentifiedResult<T>(id);
     sendToWorker.send([id, method.name, args]);
@@ -77,7 +80,7 @@ class XmtpIsolate {
   }
 }
 
-//TODO(rhbrunetto): generate code for interface / dispatcher
+// TODO(rhbrunetto): generate code for interface / dispatcher
 Map<
     String,
     Future<Object?> Function(
@@ -112,7 +115,7 @@ Map<
       .then((sent) => sent.id),
 };
 
-void _mainXmtpIsolate(List args) async {
+Future<void> _mainXmtpIsolate(List args) async {
   await configureDependencies();
 
   final responsePort = args[0] as SendPort;
@@ -120,41 +123,41 @@ void _mainXmtpIsolate(List args) async {
 
   debugPrint('starting xmtp worker for ${keys.wallet}');
 
-  //TODO(rhbrunetto): improve DI on isolate
+  // TODO(rhbrunetto): improve DI on isolate
   final api = sl<xmtp.Api>();
   final client = await xmtp.Client.createFromKeys(api, keys);
-  print(client.address);
-  print(api);
   final receiver = sl<XmtpReceiver>(param1: client);
   final sender = sl<XmtpSender>(param1: client);
 
-  final ReceivePort workerPort = ReceivePort('xmtp worker');
-
-  //TODO(rhbrunetto): improve listening, this can cause mem leak
-  workerPort.listen((command) async {
-    try {
-      if (command is List && command.length == 3) {
-        final id = command[0];
-        final method = command[1];
-        final args = command[2] ?? [];
-        debugPrint('worker received command: $method');
+  // TODO(rhbrunetto): improve listening, this can cause mem leak
+  final ReceivePort workerPort = ReceivePort('xmtp worker')
+    ..listen(
+      (command) async {
         try {
-          final res = await _commands[method]?.call(receiver, sender, args);
-          responsePort.send(["complete", id, true, res]);
-        } catch (err) {
-          debugPrint('worker failed to execute command: $method: $err');
-          responsePort.send(["complete", id, false, null]);
+          if (command is List && command.length == 3) {
+            final id = command[0];
+            final method = command[1];
+            final args = command[2] ?? [];
+            debugPrint('worker received command: $method');
+            try {
+              final res = await _commands[method]?.call(receiver, sender, args);
+              responsePort.send(['complete', id, true, res]);
+            } on Exception catch (err) {
+              debugPrint('worker failed to execute command: $method: $err');
+              responsePort.send(['complete', id, false, null]);
+            }
+          } else {
+            debugPrint('worker discarding malformed command: $command');
+          }
+        } on Exception catch (err) {
+          debugPrint('error handling xmtp isolate request: $err for $command');
         }
-      } else {
-        debugPrint('worker discarding malformed command: $command');
-      }
-    } catch (err) {
-      debugPrint('error handling xmtp isolate request: $err for $command');
-    }
-  });
-  responsePort.send(["port", workerPort.sendPort]);
+      },
+    );
 
-  receiver.start();
+  responsePort.send(['port', workerPort.sendPort]);
+
+  await receiver.start();
 }
 
 int _commandCount = 0;
@@ -169,7 +172,7 @@ class _ForegroundReceiver {
   bool isListening = false;
 
   Future<T> waitForIdentifiedResult<T>(String id) {
-    Completer<T> completer = (pending[id] = Completer<T>());
+    final Completer<T> completer = pending[id] = Completer<T>();
     return completer.future.timeout(_commandTimeout)
       ..whenComplete(() => pending.remove(id));
   }
@@ -186,9 +189,9 @@ class _ForegroundReceiver {
         if (res is List && res.isNotEmpty) {
           debugPrint('UI received response: $res');
           final type = res[0];
-          if (type == "port") {
+          if (type == 'port') {
             _handlePort(res[1] as SendPort);
-          } else if (type == "complete") {
+          } else if (type == 'complete') {
             _handleCompletion(
               res[1].toString(),
               res[2] as bool,
@@ -200,7 +203,7 @@ class _ForegroundReceiver {
         } else {
           debugPrint('malformed response: $res');
         }
-      } catch (err) {
+      } on Exception catch (err) {
         debugPrint('error handling xmtp isolate response: $err');
       }
     });

@@ -18,6 +18,8 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$Session {
   Web3App get app => throw _privateConstructorUsedError;
   SessionData get sessionData => throw _privateConstructorUsedError;
+  WalletConnectModalService get modalService =>
+      throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $SessionCopyWith<Session> get copyWith => throw _privateConstructorUsedError;
@@ -28,7 +30,10 @@ abstract class $SessionCopyWith<$Res> {
   factory $SessionCopyWith(Session value, $Res Function(Session) then) =
       _$SessionCopyWithImpl<$Res, Session>;
   @useResult
-  $Res call({Web3App app, SessionData sessionData});
+  $Res call(
+      {Web3App app,
+      SessionData sessionData,
+      WalletConnectModalService modalService});
 
   $SessionDataCopyWith<$Res> get sessionData;
 }
@@ -48,6 +53,7 @@ class _$SessionCopyWithImpl<$Res, $Val extends Session>
   $Res call({
     Object? app = null,
     Object? sessionData = null,
+    Object? modalService = null,
   }) {
     return _then(_value.copyWith(
       app: null == app
@@ -58,6 +64,10 @@ class _$SessionCopyWithImpl<$Res, $Val extends Session>
           ? _value.sessionData
           : sessionData // ignore: cast_nullable_to_non_nullable
               as SessionData,
+      modalService: null == modalService
+          ? _value.modalService
+          : modalService // ignore: cast_nullable_to_non_nullable
+              as WalletConnectModalService,
     ) as $Val);
   }
 
@@ -77,7 +87,10 @@ abstract class _$$_SessionCopyWith<$Res> implements $SessionCopyWith<$Res> {
       __$$_SessionCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({Web3App app, SessionData sessionData});
+  $Res call(
+      {Web3App app,
+      SessionData sessionData,
+      WalletConnectModalService modalService});
 
   @override
   $SessionDataCopyWith<$Res> get sessionData;
@@ -95,6 +108,7 @@ class __$$_SessionCopyWithImpl<$Res>
   $Res call({
     Object? app = null,
     Object? sessionData = null,
+    Object? modalService = null,
   }) {
     return _then(_$_Session(
       app: null == app
@@ -105,6 +119,10 @@ class __$$_SessionCopyWithImpl<$Res>
           ? _value.sessionData
           : sessionData // ignore: cast_nullable_to_non_nullable
               as SessionData,
+      modalService: null == modalService
+          ? _value.modalService
+          : modalService // ignore: cast_nullable_to_non_nullable
+              as WalletConnectModalService,
     ));
   }
 }
@@ -112,16 +130,21 @@ class __$$_SessionCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_Session implements _Session {
-  const _$_Session({required this.app, required this.sessionData});
+  const _$_Session(
+      {required this.app,
+      required this.sessionData,
+      required this.modalService});
 
   @override
   final Web3App app;
   @override
   final SessionData sessionData;
+  @override
+  final WalletConnectModalService modalService;
 
   @override
   String toString() {
-    return 'Session(app: $app, sessionData: $sessionData)';
+    return 'Session(app: $app, sessionData: $sessionData, modalService: $modalService)';
   }
 
   @override
@@ -131,11 +154,13 @@ class _$_Session implements _Session {
             other is _$_Session &&
             (identical(other.app, app) || other.app == app) &&
             (identical(other.sessionData, sessionData) ||
-                other.sessionData == sessionData));
+                other.sessionData == sessionData) &&
+            (identical(other.modalService, modalService) ||
+                other.modalService == modalService));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, app, sessionData);
+  int get hashCode => Object.hash(runtimeType, app, sessionData, modalService);
 
   @JsonKey(ignore: true)
   @override
@@ -147,12 +172,15 @@ class _$_Session implements _Session {
 abstract class _Session implements Session {
   const factory _Session(
       {required final Web3App app,
-      required final SessionData sessionData}) = _$_Session;
+      required final SessionData sessionData,
+      required final WalletConnectModalService modalService}) = _$_Session;
 
   @override
   Web3App get app;
   @override
   SessionData get sessionData;
+  @override
+  WalletConnectModalService get modalService;
   @override
   @JsonKey(ignore: true)
   _$$_SessionCopyWith<_$_Session> get copyWith =>

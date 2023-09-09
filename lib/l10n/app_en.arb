@@ -1,0 +1,14 @@
+{
+  "ethChat": "ETH Chat",
+  "loginTitle1": "Welcome to",
+  "loginSubtitle": "The future of web3 chat is here",
+  "connectCTA1": "Start by ",
+  "connectCTA2": "connecting to you wallet",
+  "xmtpFooter": "Powered by XMTP",
+  "githubFooter": "Check out source code",
+  "xmtpSignTitle": "You're almost done!",
+  "xmtpSignSubtitle": "One last thing remaining...",
+  "xmtpInstructions1": "Go back to your wallet app",
+  "xmtpInstructions2": "and authorize ETH chat",
+  "openWallet": "Open wallet"
+}

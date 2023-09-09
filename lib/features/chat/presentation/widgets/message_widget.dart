@@ -1,8 +1,9 @@
 import 'package:dfunc/dfunc.dart';
-import 'package:eth_chat/features/chat/data/models/message.dart';
-import 'package:eth_chat/utils/namespace.dart';
 import 'package:flutter/material.dart';
 import 'package:xmtp/xmtp.dart' as xmtp;
+
+import '../../../../utils/namespace.dart';
+import '../../data/models/message.dart';
 
 class MessageWidget extends StatelessWidget {
   const MessageWidget({
@@ -33,7 +34,7 @@ class MessageWidget extends StatelessWidget {
             );
           }
 
-          //TODO(rhbrunetto): add support to other content types
+          // TODO(rhbrunetto): add support to other content types
           return const SizedBox.shrink();
         },
       );

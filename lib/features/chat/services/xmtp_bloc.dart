@@ -1,13 +1,14 @@
 import 'package:dfunc/dfunc.dart';
-import 'package:eth_chat/features/chat/services/xmtp/xmtp_isolate.dart';
-import 'package:eth_chat/features/session/data/session.dart';
-import 'package:eth_chat/utils/processing_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:injectable/injectable.dart';
 import 'package:walletconnect_flutter_v2/walletconnect_flutter_v2.dart';
 import 'package:web3dart/crypto.dart';
 import 'package:xmtp/xmtp.dart' as xmtp;
+
+import '../../../utils/processing_state.dart';
+import '../../session/data/session.dart';
+import 'xmtp/xmtp_isolate.dart';
 
 typedef XmtpState = ProcessingState<XmtpIsolate>;
 
@@ -26,7 +27,7 @@ class XmtpBloc extends Cubit<XmtpState> {
   Future<void> initializeIsolate(Session session) => tryEitherAsync(
         (_) async {
           emit(const XmtpState.loading());
-          final keys = await _getKeys(session.app, session.sessionData);
+          final keys = await _getKeys(session);
           final isolate = await XmtpIsolate.spawn(keys);
           return isolate;
         },
@@ -47,18 +48,18 @@ class XmtpBloc extends Cubit<XmtpState> {
     await super.close();
   }
 
-  Future<xmtp.PrivateKeyBundle> _getKeys(
-    Web3App app,
-    SessionData session,
-  ) async {
-    final api = _api;
+  Future<xmtp.PrivateKeyBundle> _getKeys(Session session) async {
+    final app = session.app;
+    final data = session.sessionData;
+
     final storedKeys = await _storage.readStoredKeys();
 
     final xmtp.Client client;
     if (storedKeys != null) {
-      client = await xmtp.Client.createFromKeys(api, storedKeys);
+      client = await xmtp.Client.createFromKeys(_api, storedKeys);
     } else {
-      client = await xmtp.Client.createFromWallet(api, session.asSigner(app));
+      session.openWallet().ignore();
+      client = await xmtp.Client.createFromWallet(_api, data.asSigner(app));
       await _storage.writeKeys(client.keys);
     }
 
@@ -67,7 +68,9 @@ class XmtpBloc extends Cubit<XmtpState> {
 }
 
 extension on SessionData {
+  // TODO(rhbrunetto): For some reason, app.request is not launching wallet app
   xmtp.Signer asSigner(Web3App app) {
+    // TODO(rhbrunetto): Remove hardcoded chain
     const chain = 'eip155';
     const chainId = 'eip155:1';
     final namespace = namespaces[chain];
@@ -86,7 +89,8 @@ extension on SessionData {
               params: [text, address],
             ),
           )
-          .then((res) => hexToBytes(res)),
+          // ignore: unnecessary_lambdas, can't cast
+          .then((it) => hexToBytes(it)),
     );
   }
 }

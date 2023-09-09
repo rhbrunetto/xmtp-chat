@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class RetryXmtpWidget extends StatelessWidget {
-  const RetryXmtpWidget({
+class XmtpRetryWidget extends StatelessWidget {
+  const XmtpRetryWidget({
     super.key,
     required this.onRetry,
   });

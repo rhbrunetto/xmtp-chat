@@ -3,6 +3,7 @@ import 'package:dfunc/dfunc.dart';
 import 'package:eth_chat/features/chat/data/models/convo.dart';
 import 'package:eth_chat/features/chat/presentation/widgets/new_chat_dialog.dart';
 import 'package:eth_chat/features/chat/services/chat_service.dart';
+import 'package:eth_chat/features/session/data/session.dart';
 import 'package:eth_chat/features/session/services/session_cubit.dart';
 import 'package:eth_chat/routes.gr.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';

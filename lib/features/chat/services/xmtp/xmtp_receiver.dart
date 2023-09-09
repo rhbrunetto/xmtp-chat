@@ -5,16 +5,16 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:dfunc/dfunc.dart';
-import 'package:eth_chat/features/chat/data/convo_repository.dart';
-import 'package:eth_chat/features/chat/data/message_repository.dart';
-import 'package:eth_chat/features/chat/services/xmtp/xmtp_adapter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:quiver/iterables.dart';
 import 'package:retry/retry.dart';
 import 'package:xmtp/xmtp.dart' as xmtp;
 
-//TODO(rhbrunetto): Implement retry (failure tolerance)
+import '../../data/convo_repository.dart';
+import '../../data/message_repository.dart';
+import 'xmtp_adapter.dart';
+
 @injectable
 class XmtpReceiver {
   XmtpReceiver({
