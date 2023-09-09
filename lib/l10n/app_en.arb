@@ -17,6 +17,7 @@
   "chatEmptyCTA": "Start a new conversation",
   "retry": "Try again",
   "logout": "Disconnect",
+  "newChatTitle": "Recipient address",
   "durationInDays": "{days} days ago",
   "@durationInSeconds": {
     "placeholders": {
