@@ -1,12 +1,15 @@
 # XMTP Chat
 
-A small working web3 chat example using xmtp-flutter and walletconnect-flutterv2.
+A small working Flutter app chat example using [xmtp](https://pub.dev/packages/xmtp)
+ and [walletconnect_flutter_v2](https://pub.dev/packages/walletconnect_flutter_v2).
 
 This project has no commercial purposes.
 
-Feel free to clone, edit and change, honoring the LICENSE.
+Feel free to clone, edit and change, honoring the [LICENSE](LICENSE).
 
 ## To Do
+
+Some important improvements/fixes are still needed:
 
 - [ ] Fix XmtpIsolate connection issues
   - XmtpIsolate will lose connection and not recover from it
