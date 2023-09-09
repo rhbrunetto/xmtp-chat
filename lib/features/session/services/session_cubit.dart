@@ -1,9 +1,11 @@
 import 'package:bloc/bloc.dart';
 import 'package:dfunc/dfunc.dart';
-import 'package:eth_chat/features/session/data/session.dart';
-import 'package:eth_chat/utils/processing_state.dart';
 import 'package:injectable/injectable.dart';
 import 'package:walletconnect_flutter_v2/walletconnect_flutter_v2.dart';
+import 'package:walletconnect_modal_flutter/walletconnect_modal_flutter.dart';
+
+import '../../../utils/processing_state.dart';
+import '../data/session.dart';
 
 typedef SessionState = ProcessingState<Session>;
 
@@ -11,10 +13,16 @@ typedef SessionState = ProcessingState<Session>;
 class SessionCubit extends Cubit<SessionState> {
   SessionCubit() : super(const SessionState.failed());
 
-  void startSession(Web3App app, SessionData session) => emit(
+  void startSession(
+    Web3App app,
+    SessionData session,
+    WalletConnectModalService service,
+  ) =>
+      emit(
         Session(
           app: app,
           sessionData: session,
+          modalService: service,
         ).let(SessionState.success),
       );
 

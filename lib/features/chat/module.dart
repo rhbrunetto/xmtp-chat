@@ -1,16 +1,17 @@
-import 'package:eth_chat/core/widgets/loading.dart';
-import 'package:eth_chat/di.dart';
-import 'package:eth_chat/features/chat/data/convo_repository.dart';
-import 'package:eth_chat/features/chat/data/message_repository.dart';
-import 'package:eth_chat/features/chat/presentation/widgets/retry_xmtp_widget.dart';
-import 'package:eth_chat/features/chat/services/chat_service.dart';
-import 'package:eth_chat/features/chat/services/xmtp_bloc.dart';
-import 'package:eth_chat/features/session/data/session.dart';
-import 'package:eth_chat/features/session/module.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nested/nested.dart';
 import 'package:provider/provider.dart';
+
+import '../../di.dart';
+import '../session/data/session.dart';
+import '../session/module.dart';
+import 'data/convo_repository.dart';
+import 'data/message_repository.dart';
+import 'presentation/widgets/xmtp_loading_widget.dart';
+import 'presentation/widgets/xmtp_retry_widget.dart';
+import 'services/chat_service.dart';
+import 'services/xmtp_bloc.dart';
 
 class ChatModule extends SingleChildStatefulWidget {
   const ChatModule({super.key, super.child});
@@ -42,8 +43,8 @@ class _State extends SingleChildState<ChatModule> {
       BlocBuilder<XmtpBloc, XmtpState>(
         bloc: _xmtpBloc,
         builder: (context, state) => state.when(
-          loading: () => const LoadingWidget(),
-          failed: () => RetryXmtpWidget(onRetry: _initIsolate),
+          loading: () => const XmtpLoadingWidget(),
+          failed: () => XmtpRetryWidget(onRetry: _initIsolate),
           success: (isolate) => MultiProvider(
             providers: [
               Provider.value(value: isolate),
