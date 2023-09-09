@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:walletconnect_flutter_v2/apis/utils/namespace_utils.dart';
 
 import '../../../../l10n/l10n.dart';
 

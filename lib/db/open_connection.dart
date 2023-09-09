@@ -19,19 +19,21 @@ QueryExecutor openConnection() => LazyDatabase(() async {
 /// If the isolate does not exist, this spawns it.
 Future<DatabaseConnection> connectToDatabase(final String dbName) async {
   // First we check if the isolate already exists.
-  var alreadyExists = IsolateNameServer.lookupPortByName(dbName);
+  final alreadyExists = IsolateNameServer.lookupPortByName(dbName);
   if (alreadyExists != null) {
     return DriftIsolate.fromConnectPort(alreadyExists).connect();
   }
 
   // Otherwise we need to spawn a new one.
   final token = RootIsolateToken.instance;
-  var dbIsolate = await DriftIsolate.spawn(() => LazyDatabase(() async {
-        BackgroundIsolateBinaryMessenger.ensureInitialized(token!);
-        var dbFolder = await getApplicationDocumentsDirectory();
-        var path = p.join(dbFolder.path, dbName);
-        return NativeDatabase(File(path));
-      }));
+  final dbIsolate = await DriftIsolate.spawn(
+    () => LazyDatabase(() async {
+      BackgroundIsolateBinaryMessenger.ensureInitialized(token!);
+      final dbFolder = await getApplicationDocumentsDirectory();
+      final path = p.join(dbFolder.path, dbName);
+      return NativeDatabase(File(path));
+    }),
+  );
 
   // Save the spawned isolate so we can find it later.
   IsolateNameServer.registerPortWithName(

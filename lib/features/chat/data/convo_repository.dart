@@ -1,9 +1,10 @@
 import 'package:dfunc/dfunc.dart';
 import 'package:drift/drift.dart';
-import 'package:eth_chat/db/db.dart';
-import 'package:eth_chat/features/chat/data/models/convo.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:injectable/injectable.dart';
+
+import '../../../db/db.dart';
+import 'models/convo.dart';
 
 @injectable
 class ConvoRepository {
@@ -23,7 +24,7 @@ class ConvoRepository {
             _db.convoRows,
             convos.map((it) => it.toDto()),
             mode: InsertMode.insertOrIgnore,
-          ));
+          ),);
 
   Future<Convo?> read(String topic) async {
     final query = _db.convoRows.select()..where((t) => t.topic.equals(topic));

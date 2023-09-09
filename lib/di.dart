@@ -1,10 +1,11 @@
-import 'package:eth_chat/config.dart';
-import 'package:eth_chat/db/db.dart';
-import 'package:eth_chat/di.config.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xmtp/xmtp.dart' as xmtp;
+
+import 'config.dart';
+import 'db/db.dart';
+import 'di.config.dart';
 
 final sl = GetIt.instance;
 

@@ -1,14 +1,15 @@
 import 'dart:async';
 
-import 'package:eth_chat/features/chat/data/convo_repository.dart';
-import 'package:eth_chat/features/chat/data/message_repository.dart';
-import 'package:eth_chat/features/chat/data/models/convo.dart';
-import 'package:eth_chat/features/chat/data/models/message.dart';
-import 'package:eth_chat/features/chat/services/xmtp/xmtp_isolate.dart';
-import 'package:eth_chat/utils/namespace.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xmtp/xmtp.dart' as xmtp;
+
+import '../../../utils/namespace.dart';
+import '../data/convo_repository.dart';
+import '../data/message_repository.dart';
+import '../data/models/convo.dart';
+import '../data/models/message.dart';
+import 'xmtp/xmtp_isolate.dart';
 
 @injectable
 class ChatService {
@@ -39,16 +40,14 @@ class ChatService {
         XmtpIsolateCommand.refreshMessages,
         args: [
           [topic],
-          null
+          null,
         ],
       );
 
-  Future<String> newConversation(String address) {
-    return _isolate.command(
+  Future<String> newConversation(String address) => _isolate.command(
         XmtpIsolateCommand.newConversation,
         args: [address, '', const <String, String>{}],
       );
-  }
 
   Future<void> sendMessage({
     required String topic,
@@ -58,10 +57,11 @@ class ChatService {
         XmtpIsolateCommand.sendMessage,
         args: [
           topic,
-          (await codecs.encode(xmtp.DecodedContent(
-            xmtp.contentTypeText,
-            message,
-          )))
+          (
+            await codecs.encode(
+              xmtp.DecodedContent(xmtp.contentTypeText, message),
+            ),
+          ),
         ],
       );
 }

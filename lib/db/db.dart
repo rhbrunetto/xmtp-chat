@@ -1,7 +1,7 @@
 import 'package:drift/drift.dart';
-import 'package:eth_chat/features/chat/data/convo_repository.dart';
-import 'package:eth_chat/features/chat/data/message_repository.dart';
 
+import '../features/chat/data/convo_repository.dart';
+import '../features/chat/data/message_repository.dart';
 import 'open_connection.dart';
 
 part 'db.g.dart';

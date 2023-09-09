@@ -1,7 +1,8 @@
-import 'package:eth_chat/features/chat/data/models/convo.dart';
-import 'package:eth_chat/features/chat/data/models/message.dart';
 import 'package:web3dart/web3dart.dart';
 import 'package:xmtp/xmtp.dart' as xmtp;
+
+import '../../data/models/convo.dart';
+import '../../data/models/message.dart';
 
 extension XmtpToDbConversation on xmtp.Conversation {
   Convo toDb() => Convo(
@@ -48,8 +49,8 @@ extension DbToXmtpMessage on Message {
   Future<xmtp.DecodedMessage> toXmtp(
     xmtp.Codec<xmtp.DecodedContent> decoder,
   ) async {
-    var encodedParsed = xmtp.EncodedContent.fromBuffer(encoded);
-    var decoded = await decoder.decode(encodedParsed);
+    final encodedParsed = xmtp.EncodedContent.fromBuffer(encoded);
+    final decoded = await decoder.decode(encodedParsed);
     return xmtp.DecodedMessage(
       topic: topic,
       id: id,
