@@ -1,4 +1,3 @@
-import 'package:dfunc/dfunc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -6,8 +5,7 @@ import '../../../../l10n/l10n.dart';
 import '../../../../ui/fade_in_widget.dart';
 import '../../../session/data/session.dart';
 
-// TODO(rhbrunetto): For some reason, app.request is not launching wallet app
-// so this screen is needed to instruct user
+// TODO(rhbrunetto): For some reason, wallet app might not be launched, so this screen is needed
 class XmtpLoadingWidget extends StatelessWidget {
   const XmtpLoadingWidget({super.key});
 

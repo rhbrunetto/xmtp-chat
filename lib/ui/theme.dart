@@ -3,15 +3,6 @@ import 'package:flutter/material.dart';
 import 'colors.dart';
 
 class EthTheme {
-  const EthTheme._({
-    required this.backgroundColor,
-    required this.primaryTextColor,
-    required this.secondaryTextColor,
-    required this.brightness,
-    required this.dividerColor,
-    required this.highlightColor,
-  });
-
   const EthTheme()
       : this._(
           brightness: Brightness.light,
@@ -21,6 +12,15 @@ class EthTheme {
           dividerColor: EthColors.lavender,
           highlightColor: EthColors.violetBlue,
         );
+
+  const EthTheme._({
+    required this.backgroundColor,
+    required this.primaryTextColor,
+    required this.secondaryTextColor,
+    required this.brightness,
+    required this.dividerColor,
+    required this.highlightColor,
+  });
 
   final Color backgroundColor;
   final Color primaryTextColor;
@@ -96,19 +96,19 @@ class EthTheme {
           background: backgroundColor,
         ),
         appBarTheme: AppBarTheme(
-          backgroundColor: backgroundColor,
+          backgroundColor: EthColors.violetBlue,
           titleTextStyle: _baseTextStyle.copyWith(
             fontSize: 17,
-            color: primaryTextColor,
+            color: EthColors.mimiPink,
             fontWeight: FontWeight.bold,
             letterSpacing: .23,
           ),
-          foregroundColor: primaryTextColor,
+          foregroundColor: EthColors.mimiPink,
         ),
         canvasColor: backgroundColor,
         scaffoldBackgroundColor: backgroundColor,
         highlightColor: EthColors.violetBlue,
         hintColor: EthColors.chinaRose,
-        dividerColor: dividerColor,
+        dividerColor: EthColors.violetBlue,
       );
 }

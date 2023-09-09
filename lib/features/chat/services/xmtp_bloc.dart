@@ -68,15 +68,13 @@ class XmtpBloc extends Cubit<XmtpState> {
 }
 
 extension on SessionData {
-  // TODO(rhbrunetto): For some reason, app.request is not launching wallet app
   xmtp.Signer asSigner(Web3App app) {
     // TODO(rhbrunetto): Remove hardcoded chain
     const chain = 'eip155';
     const chainId = 'eip155:1';
     final namespace = namespaces[chain];
     if (namespace == null) throw Exception();
-    final address =
-        namespace.accounts.first.split(chainId)[1].replaceAll(':', '');
+    final address = NamespaceUtils.getAccount(namespace.accounts.first);
 
     return xmtp.Signer.create(
       address,
