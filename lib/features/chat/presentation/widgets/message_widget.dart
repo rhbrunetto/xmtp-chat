@@ -1,5 +1,7 @@
+import 'package:chat_bubbles/chat_bubbles.dart';
 import 'package:dfunc/dfunc.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:xmtp/xmtp.dart' as xmtp;
 
 import '../../../../utils/namespace.dart';
@@ -32,9 +34,7 @@ class MessageWidget extends StatelessWidget {
               sentAt: message.sentAt,
               isMine: isMine,
             );
-          }
-
-          // TODO(rhbrunetto): add support to other content types
+          } // TODO(rhbrunetto): add support to other content types
           return const SizedBox.shrink();
         },
       );
@@ -52,9 +52,26 @@ class _TextMessageWidget extends StatelessWidget {
   final bool isMine;
 
   @override
-  Widget build(BuildContext context) => ListTile(
-        title: Text(text),
-        subtitle: Text(sentAt.toIso8601String()),
-        tileColor: isMine ? Colors.white : Colors.lightBlue,
+  Widget build(BuildContext context) => Column(
+        children: [
+          BubbleSpecialOne(
+            text: text,
+            isSender: isMine,
+            textStyle: const TextStyle(fontSize: 16),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 18),
+            child: Align(
+              alignment: isMine ? Alignment.topRight : Alignment.topLeft,
+              child: Text(
+                _formatter.format(sentAt),
+                style: const TextStyle(fontSize: 8),
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+        ],
       );
 }
+
+final _formatter = DateFormat.yMd().add_jm();

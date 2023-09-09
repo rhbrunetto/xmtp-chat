@@ -1,16 +1,18 @@
-# eth_chat
+# XMTP Chat
 
-A new Flutter project.
+A small working web3 chat example using xmtp-flutter and walletconnect-flutterv2.
 
-## Getting Started
+This project has no commercial purposes.
 
-This project is a starting point for a Flutter application.
+Feel free to clone, edit and change, honoring the LICENSE.
 
-A few resources to get you started if this is your first Flutter project:
+## To Do
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- [ ] Fix XmtpIsolate connection issues
+  - XmtpIsolate will lose connection and not recover from it
+  - Re-starting XmtpIsolate might throw uncaught exceptions
+- [ ] Improve error handling
+  - Retrieve errors from XmtpIsolate to give user some context (eg: contact not on Xmtp network)
+- [ ] Improve overall design
+- [ ] Add feature to name conversations
+- [ ] Add LocalNotifications support

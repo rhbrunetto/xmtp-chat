@@ -220,7 +220,7 @@ class _ForegroundReceiver {
       debugPrint('unexpected pending command completion: $id');
     }
     if (success) {
-      pending[id]?.complete(result);
+      pending[id]?.complete(result.toString());
     } else {
       pending[id]?.completeError('command failed');
     }

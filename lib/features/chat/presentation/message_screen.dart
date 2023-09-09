@@ -1,13 +1,14 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:dfunc/dfunc.dart';
-import 'package:eth_chat/features/chat/data/models/message.dart';
-import 'package:eth_chat/features/chat/presentation/widgets/chat_input_widget.dart';
-import 'package:eth_chat/features/chat/presentation/widgets/message_widget.dart';
-import 'package:eth_chat/features/chat/services/chat_service.dart';
-import 'package:eth_chat/features/session/data/session.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../../session/data/session.dart';
+import '../data/models/message.dart';
+import '../services/chat_service.dart';
+import 'widgets/chat_input_widget.dart';
+import 'widgets/message_widget.dart';
 
 @RoutePage()
 class MessageScreen extends StatefulWidget {
@@ -40,31 +41,35 @@ class _State extends State<MessageScreen> {
         ),
         body: RefreshIndicator(
           onRefresh: () => _service.refreshMessages(widget.topic),
-          child: ChatInputWidget(
-            onNewMessage: (message) => _service.sendMessage(
-              topic: widget.topic,
-              message: message,
-            ),
-            builder: (context, controller) => StreamBuilder(
-              stream: _service.watchMessages(widget.topic),
-              builder: (context, snapshot) {
-                final messages =
-                    snapshot.data.ifNull(() => const IListConst<Message>([]));
+          child: SafeArea(
+            child: Material(
+              child: ChatInputWidget(
+                onNewMessage: (message) => _service.sendMessage(
+                  topic: widget.topic,
+                  message: message,
+                ),
+                child: StreamBuilder(
+                  stream: _service.watchMessages(widget.topic),
+                  builder: (context, snapshot) {
+                    final messages = snapshot.data
+                        .ifNull(() => const IListConst<Message>([]));
 
-                return ListView.builder(
-                  controller: controller,
-                  reverse: true,
-                  itemCount: messages.length,
-                  itemBuilder: (context, index) {
-                    final message = messages.elementAt(index);
+                    return ListView.builder(
+                      reverse: true,
+                      itemCount: messages.length,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      itemBuilder: (context, index) {
+                        final message = messages.elementAt(index);
 
-                    return MessageWidget(
-                      message: message,
-                      isMine: message.sender == _session.address,
+                        return MessageWidget(
+                          message: message,
+                          isMine: message.sender == _session.address,
+                        );
+                      },
                     );
                   },
-                );
-              },
+                ),
+              ),
             ),
           ),
         ),
