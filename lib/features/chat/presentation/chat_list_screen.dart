@@ -4,6 +4,7 @@ import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/widgets/refreshable_widget.dart';
 import '../../../core/widgets/retry_widget.dart';
 import '../../../l10n/l10n.dart';
 import '../../../routes.gr.dart';
@@ -55,7 +56,7 @@ class _State extends State<ChatListScreen> {
           foregroundColor: EthColors.mimiPink,
           child: const Icon(Icons.chat),
         ),
-        body: RefreshIndicator(
+        body: RefreshableWidget(
           onRefresh: _service.refreshConversations,
           child: StreamBuilder(
             stream: _service.watchConversations(),
@@ -75,6 +76,7 @@ class _State extends State<ChatListScreen> {
               }
 
               return ListView.separated(
+                shrinkWrap: true,
                 itemCount: conversations.length,
                 separatorBuilder: (context, _) => const Divider(),
                 itemBuilder: (context, index) {
