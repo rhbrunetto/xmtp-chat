@@ -1,8 +1,9 @@
-import 'package:eth_chat/di.dart';
-import 'package:eth_chat/features/session/services/session_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nested/nested.dart';
+
+import '../../di.dart';
+import 'services/session_cubit.dart';
 
 class SessionModule extends SingleChildStatelessWidget {
   const SessionModule({super.key, super.child});

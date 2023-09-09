@@ -1,8 +1,9 @@
-import 'package:eth_chat/features/chat/data/convo_repository.dart';
-import 'package:eth_chat/features/chat/data/message_repository.dart';
-import 'package:eth_chat/features/chat/services/xmtp/xmtp_adapter.dart';
 import 'package:injectable/injectable.dart';
 import 'package:xmtp/xmtp.dart' as xmtp;
+
+import '../../data/convo_repository.dart';
+import '../../data/message_repository.dart';
+import 'xmtp_adapter.dart';
 
 @injectable
 class XmtpSender {
@@ -22,7 +23,7 @@ class XmtpSender {
 
   Future<xmtp.Conversation> newConversation(
     String address, {
-    String conversationId = "",
+    String conversationId = '',
     Map<String, String> metadata = const <String, String>{},
   }) =>
       _client.newConversation(

@@ -1,11 +1,12 @@
 import 'dart:async';
 
-import 'package:eth_chat/config.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:walletconnect_flutter_v2/walletconnect_flutter_v2.dart';
 import 'package:walletconnect_modal_flutter/walletconnect_modal_flutter.dart';
+
+import '../../../config.dart';
 
 part 'wallet_bloc.freezed.dart';
 
@@ -16,13 +17,12 @@ typedef _Emitter = Emitter<_State>;
 
 @freezed
 class WalletState with _$WalletState {
-  const factory WalletState.none() = _None;
-
   const factory WalletState({
     required Web3App app,
     required WalletConnectModalService modalService,
     @Default(true) bool isProcessing,
   }) = _WalletState;
+  const factory WalletState.none() = _None;
 }
 
 @freezed

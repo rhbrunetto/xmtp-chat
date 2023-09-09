@@ -36,8 +36,8 @@ class XmtpReceiver {
   final _recovery = _Recovery();
 
   Future<void> start() async {
-    _restartConversationStream();
-    _restartMessageStream();
+    await _restartConversationStream();
+    await _restartMessageStream();
 
     final lastConversation = await _convoRepository.readLastConversation();
     await refreshConversations(since: lastConversation?.createdAt);
@@ -89,17 +89,20 @@ class XmtpReceiver {
 
     final batches = partition(convos, 3);
     for (final batch in batches) {
-      await Future.wait(batch.map((conversation) async {
-        try {
-          await _refreshMessages([conversation]);
-        } catch (e) {
-          debugPrint('error refreshing conversations: $e');
-        }
-      }));
+      await Future.wait(
+        batch.map((conversation) async {
+          try {
+            await _refreshMessages([conversation]);
+          } on Exception catch (e) {
+            debugPrint('error refreshing conversations: $e');
+          }
+        }),
+      );
     }
 
     debugPrint(
-        'backfill finished: (count ${convos.length}) ${clock.elapsedMilliseconds} ms');
+      'backfill finished: (count ${convos.length}) ${clock.elapsedMilliseconds} ms',
+    );
   }
 
   Future<int> _refreshMessages(
@@ -120,7 +123,7 @@ class XmtpReceiver {
       _onConvo,
       onError: (_) {
         _stopConversationStream();
-        _recovery.attempt("conversations", _restartConversationStream);
+        _recovery.attempt('conversations', _restartConversationStream);
       },
     );
   }
@@ -128,10 +131,10 @@ class XmtpReceiver {
   Future<void> _onConvo(xmtp.Conversation convo) async {
     await _convoRepository.saveConversations([convo.toDb()]);
     await _refreshMessages([convo]);
-    _restartMessageStream();
+    await _restartMessageStream();
   }
 
-  void _restartMessageStream() async {
+  Future<void> _restartMessageStream() async {
     final convos = await _convoRepository
         .readConversations()
         .letAsync((it) => it.map((c) => c.toXmtp()));
@@ -146,7 +149,7 @@ class XmtpReceiver {
       _onMessage,
       onError: (_) {
         _stopMessageStream();
-        _recovery.attempt("messages", () => _restartMessageStream());
+        _recovery.attempt('messages', _restartMessageStream);
       },
     );
   }
@@ -157,20 +160,20 @@ class XmtpReceiver {
     if (isFirst) {
       final convo = await _convoRepository.read(topic);
       if (convo == null) return;
-      _refreshMessages([convo.toXmtp()]);
+      await _refreshMessages([convo.toXmtp()]);
     }
     await _messageRepository.saveMessages([decodedMessage.toDb()]);
   }
 
   void _stopMessageStream() {
-    _recovery.cancel("messages");
+    _recovery.cancel('messages');
     _messageStreamTopics.clear();
     _messageStream?.cancel();
     _messageStream = null;
   }
 
   void _stopConversationStream() {
-    _recovery.cancel("conversations");
+    _recovery.cancel('conversations');
     _conversationStream?.cancel();
     _conversationStream = null;
   }
@@ -191,7 +194,7 @@ class _Recovery {
   void cancel(String name) => _attempts.remove(name)?.cancel();
 
   void reset() {
-    for (var timer in _attempts.values) {
+    for (final timer in _attempts.values) {
       timer.cancel();
     }
     _attempts.clear();
@@ -199,7 +202,7 @@ class _Recovery {
   }
 
   int _incrementRecentCount() {
-    var now = DateTime.now();
+    final now = DateTime.now();
     _recentStack
       ..insert(0, now)
       ..removeWhere((t) => t.isBefore(now.subtract(_config.maxDelay)))

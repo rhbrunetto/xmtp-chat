@@ -1,8 +1,9 @@
 import 'package:drift/drift.dart';
-import 'package:eth_chat/db/db.dart';
-import 'package:eth_chat/features/chat/data/models/message.dart';
 import 'package:fast_immutable_collections/fast_immutable_collections.dart';
 import 'package:injectable/injectable.dart';
+
+import '../../../db/db.dart';
+import 'models/message.dart';
 
 @injectable
 class MessageRepository {
@@ -15,7 +16,7 @@ class MessageRepository {
             _db.messageRows,
             messages.map((msg) => msg.toDto()),
             mode: InsertMode.insertOrIgnore,
-          ));
+          ),);
 
   Stream<IList<Message>> watchMessages({
     required String topic,

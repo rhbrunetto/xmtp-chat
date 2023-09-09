@@ -1,12 +1,13 @@
-import 'package:dfunc/dfunc.dart';
-import 'package:eth_chat/features/chat/module.dart';
-import 'package:eth_chat/features/session/data/session.dart';
-import 'package:eth_chat/features/session/services/session_cubit.dart';
-import 'package:eth_chat/routes.gr.dart';
-import 'package:flutter/material.dart';
 import 'package:auto_route/auto_route.dart';
-import 'package:provider/provider.dart';
+import 'package:dfunc/dfunc.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
+
+import '../features/chat/module.dart';
+import '../features/session/data/session.dart';
+import '../features/session/services/session_cubit.dart';
+import '../routes.gr.dart';
 
 @RoutePage()
 class AuthenticatedFlowScreen extends StatelessWidget {
