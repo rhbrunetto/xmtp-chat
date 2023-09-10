@@ -12,6 +12,8 @@ class XmtpRetryWidget extends StatelessWidget {
   Widget build(BuildContext context) => Scaffold(
         body: Center(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text('An error ocurred, please try again'),
               const SizedBox(height: 16),

@@ -45,20 +45,19 @@ class _State extends SingleChildState<ChatModule> {
         builder: (context, state) => state.when(
           loading: () => const XmtpLoadingWidget(),
           failed: () => XmtpRetryWidget(onRetry: _initIsolate),
-          success: (isolate) => MultiProvider(
+          success: (pair) => MultiProvider(
             providers: [
-              Provider.value(value: isolate),
+              Provider.value(value: pair.isolate),
               Provider(
                 lazy: false,
-                create: (context) => sl<ChatService>(param1: isolate),
+                create: (context) => sl<ChatService>(param1: pair.isolate),
               ),
             ],
             child: LogoutListener(
-              onLogout: (_) {
-                isolate.kill();
-                sl<MessageRepository>().clear();
-                sl<ConvoRepository>().clear();
-                _xmtpBloc.disconnect();
+              onLogout: (_) async {
+                await sl<MessageRepository>().clear();
+                await sl<ConvoRepository>().clear();
+                await _xmtpBloc.disconnect();
               },
               child: child,
             ),

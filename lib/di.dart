@@ -23,8 +23,8 @@ abstract class AppModule {
   FlutterSecureStorage get secureStorage => const FlutterSecureStorage();
 
   @lazySingleton
-  final xmtp.Api api = xmtp.Api.create(host: xmtpHost, isSecure: true);
-
-  @lazySingleton
   final db = MyDatabase.connect();
+
+  @factoryMethod
+  xmtp.Api createApi() => xmtp.Api.create(host: xmtpHost, isSecure: true);
 }

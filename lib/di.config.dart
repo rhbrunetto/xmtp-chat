@@ -39,7 +39,7 @@ extension GetItInjectableX on _i1.GetIt {
       environmentFilter,
     );
     final appModule = _$AppModule();
-    gh.factory<_i3.Api>(() => appModule.api);
+    gh.factory<_i3.Api>(() => appModule.createApi());
     gh.lazySingleton<_i4.FlutterSecureStorage>(() => appModule.secureStorage);
     gh.factory<_i5.MyDatabase>(() => appModule.db);
     gh.factory<_i6.SessionCubit>(() => _i6.SessionCubit());

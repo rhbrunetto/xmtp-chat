@@ -10,7 +10,8 @@ import '../../../utils/processing_state.dart';
 import '../../session/data/session.dart';
 import 'xmtp/xmtp_isolate.dart';
 
-typedef XmtpState = ProcessingState<XmtpIsolate>;
+typedef XmtpPair = ({XmtpIsolate isolate, xmtp.Client client});
+typedef XmtpState = ProcessingState<XmtpPair>;
 
 @injectable
 class XmtpBloc extends Cubit<XmtpState> {
@@ -27,9 +28,9 @@ class XmtpBloc extends Cubit<XmtpState> {
   Future<void> initializeIsolate(Session session) => tryEitherAsync(
         (_) async {
           emit(const XmtpState.loading());
-          final keys = await _getKeys(session);
-          final isolate = await XmtpIsolate.spawn(keys);
-          return isolate;
+          final client = await _getClient(session);
+          final isolate = await XmtpIsolate.spawn(client.keys);
+          return (isolate: isolate, client: client);
         },
       )
           .letAsync(
@@ -40,15 +41,23 @@ class XmtpBloc extends Cubit<XmtpState> {
           )
           .letAsync(emit);
 
-  Future<void> disconnect() => _storage.delete(key: _key);
+  Future<void> disconnect() async {
+    await state.whenOrNull(
+      success: (pair) async {
+        await pair.isolate.kill();
+        await pair.client.terminate();
+      },
+    );
+    await _storage.delete(key: _key);
+  }
 
   @override
   Future<void> close() async {
-    await state.whenOrNull(success: (it) => it.kill());
+    await disconnect();
     await super.close();
   }
 
-  Future<xmtp.PrivateKeyBundle> _getKeys(Session session) async {
+  Future<xmtp.Client> _getClient(Session session) async {
     final app = session.app;
     final data = session.sessionData;
 
@@ -63,7 +72,7 @@ class XmtpBloc extends Cubit<XmtpState> {
       await _storage.writeKeys(client.keys);
     }
 
-    return client.keys;
+    return client;
   }
 }
 

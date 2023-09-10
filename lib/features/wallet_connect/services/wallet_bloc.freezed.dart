@@ -81,112 +81,6 @@ class _$WalletStateCopyWithImpl<$Res, $Val extends WalletState>
 }
 
 /// @nodoc
-abstract class _$$_NoneCopyWith<$Res> {
-  factory _$$_NoneCopyWith(_$_None value, $Res Function(_$_None) then) =
-      __$$_NoneCopyWithImpl<$Res>;
-}
-
-/// @nodoc
-class __$$_NoneCopyWithImpl<$Res>
-    extends _$WalletStateCopyWithImpl<$Res, _$_None>
-    implements _$$_NoneCopyWith<$Res> {
-  __$$_NoneCopyWithImpl(_$_None _value, $Res Function(_$_None) _then)
-      : super(_value, _then);
-}
-
-/// @nodoc
-
-class _$_None implements _None {
-  const _$_None();
-
-  @override
-  String toString() {
-    return 'WalletState.none()';
-  }
-
-  @override
-  bool operator ==(dynamic other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType && other is _$_None);
-  }
-
-  @override
-  int get hashCode => runtimeType.hashCode;
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>(
-    TResult Function(Web3App app, WalletConnectModalService modalService,
-            bool isProcessing)
-        $default, {
-    required TResult Function() none,
-  }) {
-    return none();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>(
-    TResult? Function(Web3App app, WalletConnectModalService modalService,
-            bool isProcessing)?
-        $default, {
-    TResult? Function()? none,
-  }) {
-    return none?.call();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>(
-    TResult Function(Web3App app, WalletConnectModalService modalService,
-            bool isProcessing)?
-        $default, {
-    TResult Function()? none,
-    required TResult orElse(),
-  }) {
-    if (none != null) {
-      return none();
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>(
-    TResult Function(_WalletState value) $default, {
-    required TResult Function(_None value) none,
-  }) {
-    return none(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>(
-    TResult? Function(_WalletState value)? $default, {
-    TResult? Function(_None value)? none,
-  }) {
-    return none?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>(
-    TResult Function(_WalletState value)? $default, {
-    TResult Function(_None value)? none,
-    required TResult orElse(),
-  }) {
-    if (none != null) {
-      return none(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class _None implements WalletState {
-  const factory _None() = _$_None;
-}
-
-/// @nodoc
 abstract class _$$_WalletStateCopyWith<$Res> {
   factory _$$_WalletStateCopyWith(
           _$_WalletState value, $Res Function(_$_WalletState) then) =
@@ -351,6 +245,112 @@ abstract class _WalletState implements WalletState {
   @JsonKey(ignore: true)
   _$$_WalletStateCopyWith<_$_WalletState> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$_NoneCopyWith<$Res> {
+  factory _$$_NoneCopyWith(_$_None value, $Res Function(_$_None) then) =
+      __$$_NoneCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$$_NoneCopyWithImpl<$Res>
+    extends _$WalletStateCopyWithImpl<$Res, _$_None>
+    implements _$$_NoneCopyWith<$Res> {
+  __$$_NoneCopyWithImpl(_$_None _value, $Res Function(_$_None) _then)
+      : super(_value, _then);
+}
+
+/// @nodoc
+
+class _$_None implements _None {
+  const _$_None();
+
+  @override
+  String toString() {
+    return 'WalletState.none()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$_None);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>(
+    TResult Function(Web3App app, WalletConnectModalService modalService,
+            bool isProcessing)
+        $default, {
+    required TResult Function() none,
+  }) {
+    return none();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>(
+    TResult? Function(Web3App app, WalletConnectModalService modalService,
+            bool isProcessing)?
+        $default, {
+    TResult? Function()? none,
+  }) {
+    return none?.call();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>(
+    TResult Function(Web3App app, WalletConnectModalService modalService,
+            bool isProcessing)?
+        $default, {
+    TResult Function()? none,
+    required TResult orElse(),
+  }) {
+    if (none != null) {
+      return none();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>(
+    TResult Function(_WalletState value) $default, {
+    required TResult Function(_None value) none,
+  }) {
+    return none(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>(
+    TResult? Function(_WalletState value)? $default, {
+    TResult? Function(_None value)? none,
+  }) {
+    return none?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>(
+    TResult Function(_WalletState value)? $default, {
+    TResult Function(_None value)? none,
+    required TResult orElse(),
+  }) {
+    if (none != null) {
+      return none(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _None implements WalletState {
+  const factory _None() = _$_None;
 }
 
 /// @nodoc
